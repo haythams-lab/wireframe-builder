@@ -22,7 +22,7 @@
   --border-radius-lg: 8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--font-sans); color: var(--color-text-primary);}
+body{font-family:var(--font-sans); color: var(--color-text-primary); overflow: hidden;}
 .pi{padding:6px 10px;font-size:11px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;user-select:none;transition:background .14s,color .14s,border-color .14s;margin-bottom:3px;display:block;}
 .pi:hover{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-secondary);}
 .tb{padding:11px 16px;border:none;border-bottom:2px solid transparent;background:none;font-size:13px;font-family:var(--font-sans);cursor:pointer;transition:color .15s,border-color .15s;color:var(--color-text-secondary);}
@@ -71,7 +71,7 @@ const PALETTE=[
   {t:'timeline',l:'Timeline',c:'Content'},{t:'footer',l:'Footer',c:'Structure'},
 ];
 
-const L=({w='60%',h=7,op=0.3})=>React.createElement('div',{style:{height:h,width:w,background:G(op),borderRadius:2,flexShrink:0}});
+const L=({w='60%',h=7,op=0.3,color})=>React.createElement('div',{style:{height:h,width:w,background:color||G(op),borderRadius:2,flexShrink:0}});
 const Im=({w='100%',h=70})=>React.createElement('div',{style:{width:w,height:h,background:G(0.07),border:`1px dashed ${G(0.2)}`,borderRadius:4,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}},
   React.createElement('svg',{width:13,height:13,viewBox:'0 0 24 24',fill:'none',stroke:G(0.32),strokeWidth:'1.5'},
     React.createElement('rect',{x:3,y:3,width:18,height:18,rx:2}),React.createElement('circle',{cx:8.5,cy:8.5,r:1.5}),React.createElement('path',{d:'M21 15l-5-5L5 21'})
@@ -268,12 +268,12 @@ const IcArrow=({dir})=>{
   );
 }
 
-/* Editable Node with Action Arrows */
+/* Editable Node */
 function EditNode({label,onChange,onDelete,onAddChild,isMain,isCta,onMoveLeft,onMoveRight,onMoveUp,onMoveDown}){
   const [ed,setEd]=useState(false);
   const [draft,setDraft]=useState(label);
   const commit=()=>{onChange(draft.trim()||label);setEd(false);};
-  if(ed)return React.createElement('input',{className:'ni',value:draft,onChange:e=>setDraft(e.target.value),onBlur:commit,onKeyDown:e=>{if(e.key==='Enter')commit();if(e.key==='Escape')setEd(false);},autoFocus,style:{width:Math.max(72,draft.length*7.5)}});
+  if(ed)return React.createElement('input',{className:'ni',value:draft,onChange:e=>setDraft(e.target.value),onBlur:commit,onKeyDown:e=>{if(e.key==='Enter')commit();if(e.key==='Escape')setEd(false);},autoFocus:true,style:{width:Math.max(72,(draft||'').length*7.5)}});
   const pill={
     display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',
     background:isCta?A:isMain?'var(--color-text-primary)':'var(--color-background-secondary)',
@@ -299,7 +299,7 @@ function EditNode({label,onChange,onDelete,onAddChild,isMain,isCta,onMoveLeft,on
   );
 }
 
-function SitemapView({sitemap,setSitemap}){
+function SitemapView({sitemap,setSitemap,exportRef}){
   const upd=(id,val,t)=>setSitemap(p=>{
     if(t==='home')return{...p,home:{...p.home,label:val}};
     if(t==='cta')return{...p,ctas:p.ctas.map(c=>c.id===id?{...c,label:val}:c)};
@@ -333,7 +333,7 @@ function SitemapView({sitemap,setSitemap}){
   );
   const vl={width:1,height:10,background:G(0.16),margin:'0 auto',flexShrink:0};
 
-  return React.createElement('div',{style:{padding:'28px 24px',overflowX:'auto',minWidth:480}},
+  return React.createElement('div',{ref:exportRef,className:'app-export-ref',style:{padding:'28px 24px',overflow:'auto',flex:1,minWidth:480,background:'var(--color-background-primary)'}},
     React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:6}},
       React.createElement(EditNode,{label:sitemap.home.label,onChange:v=>upd(null,v,'home'),onDelete:()=>{},isMain:true}),
       React.createElement('div',{style:vl})
@@ -341,7 +341,6 @@ function SitemapView({sitemap,setSitemap}){
     React.createElement('div',{style:{marginBottom:32}},
       React.createElement(SL,{text:'Main Navigation & CTAs',n:sitemap.pages.length + (sitemap.ctas?.length||0)}),
       React.createElement('div',{style:{display:'flex',gap:6,flexWrap:'wrap',justifyContent:'center',alignItems:'flex-start'}},
-        // Standard Pages
         sitemap.pages.map((pg, i)=>React.createElement('div',{key:pg.id,style:{display:'flex',flexDirection:'column',alignItems:'center',padding:'0 4px'}},
           React.createElement(EditNode,{
               label:pg.label, onChange:v=>upd(pg.id,v), onDelete:()=>del(pg.id), onAddChild:()=>addSub(pg.id), isMain:true,
@@ -360,7 +359,6 @@ function SitemapView({sitemap,setSitemap}){
         React.createElement('button',{className:'an',onClick:addMain,style:{alignSelf:'flex-start',marginTop:4}},
           React.createElement(IcPlus,{s:7}),' Add Page'),
           
-        // Inline CTAs
         sitemap.ctas && sitemap.ctas.length > 0 && React.createElement(React.Fragment, null,
           React.createElement('div', {style: {width: 1, minHeight: 30, background: 'var(--color-border-secondary)', margin: '0 12px'}}),
           sitemap.ctas.map(cta=>React.createElement('div',{key:cta.id,style:{display:'flex',flexDirection:'column',alignItems:'center',padding:'0 4px'}},
@@ -382,7 +380,7 @@ function SitemapView({sitemap,setSitemap}){
   );
 }
 
-function WireframeView({canvas,setCanvas}){
+function WireframeView({canvas,setCanvas,exportRef}){
   const dragFrom=useRef(null);
   const [dropIdx,setDropIdx]=useState(null);
   const CATS=[...new Set(PALETTE.map(p=>p.c))];
@@ -422,21 +420,21 @@ function WireframeView({canvas,setCanvas}){
       return n;
   });
 
-  return React.createElement('div',{style:{display:'flex',height:'100%',minHeight:520}},
-    React.createElement('div',{style:{width:160,flexShrink:0,borderRight:`0.5px solid var(--color-border-tertiary)`,overflowY:'auto',padding:'14px 10px',background:'var(--color-background-secondary)'}},
+  return React.createElement('div',{style:{display:'flex',height:'100%',flex:1}},
+    React.createElement('div',{className:'wf-sidebar',style:{width:160,flexShrink:0,borderRight:`0.5px solid var(--color-border-tertiary)`,overflowY:'auto',padding:'14px 10px',background:'var(--color-background-secondary)'}},
       React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:8.5,color:'var(--color-text-tertiary)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:14,lineHeight:1.4}},'Components\n(Click or Drag)'),
       CATS.map(cat=>React.createElement('div',{key:cat,style:{marginBottom:14}},
         React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:8.5,color:'var(--color-text-warning)',letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:5}},cat),
         PALETTE.filter(p=>p.c===cat).map(p=>React.createElement('div',{key:p.t,className:'pi',draggable:true,onDragStart:()=>onPD(p.t),onClick:()=>addClick(p.t)},p.l))
       ))
     ),
-    React.createElement('div',{style:{flex:1,overflowY:'auto',padding:'20px',background:'var(--color-background-primary)'},onDragOver:e=>e.preventDefault(),onDrop:onFallDrop},
+    React.createElement('div',{ref:exportRef,className:'app-export-ref',style:{flex:1,overflowY:'auto',padding:'20px',background:'var(--color-background-primary)'},onDragOver:e=>e.preventDefault(),onDrop:onFallDrop},
       canvas.length===0&&React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:320,gap:10}},
         React.createElement('div',{style:{width:38,height:38,border:`1px dashed ${G(0.18)}`,borderRadius:'var(--border-radius-md)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--color-text-tertiary)',opacity:0.5}},React.createElement(IcPlus,{s:14})),
         React.createElement('p',{style:{fontSize:13,fontWeight:500,color:'var(--color-text-secondary)'}},'Click or drag components here'),
         React.createElement('p',{style:{fontSize:11,color:'var(--color-text-tertiary)'}},'Build your home page wireframe')
       ),
-      React.createElement('div',{style:{maxWidth:640,margin:'0 auto',border:`1px solid var(--color-border-secondary)`,borderRadius:'var(--border-radius-lg)',overflow:'hidden'}},
+      React.createElement('div',{style:{maxWidth:640,margin:'0 auto',border:`1px solid var(--color-border-secondary)`,borderRadius:'var(--border-radius-lg)',overflow:'hidden',background:'var(--color-background-primary)'}},
         React.createElement('div',{style:{background:'var(--color-background-secondary)',padding:'9px 14px',display:'flex',alignItems:'center',gap:7,borderBottom:`1px solid var(--color-border-secondary)`}},
           [['#FF5F57',11],['#FEBC2E',11],['#28C840',11]].map(([c,s],i)=>React.createElement('div',{key:i,style:{width:s,height:s,borderRadius:'50%',background:c}})),
           React.createElement('div',{style:{flex:1,height:22,background:'var(--color-background-primary)',borderRadius:11,marginLeft:8,border:`1px solid var(--color-border-secondary)`,display:'flex',alignItems:'center',paddingLeft:12}},
@@ -448,7 +446,6 @@ function WireframeView({canvas,setCanvas}){
           React.createElement('div',{className:'dh',draggable:true,onDragStart:()=>onCD(idx),style:{position:'absolute',left:4,top:'50%',transform:'translateY(-50%)',zIndex:3,color:'var(--color-text-tertiary)',cursor:'grab',padding:3}},React.createElement(IcGrip)),
           React.createElement('div',{style:{position:'absolute',top:5,left:18,zIndex:2,fontSize:8,fontFamily:'var(--font-mono)',color:'var(--color-text-warning)',letterSpacing:'0.06em',textTransform:'uppercase',opacity:0.75,pointerEvents:'none'}},item.label),
           
-          /* Updated Controls: Move Up, Move Down, Delete */
           React.createElement('div',{className:'rm',style:{position:'absolute',top:5,right:6,display:'flex',gap:2,zIndex:3,background:'var(--color-background-primary)',borderRadius:4,padding:2,border:'1px solid var(--color-border-secondary)',boxShadow:'0 2px 4px rgba(0,0,0,0.05)'}},
             idx > 0 && React.createElement('button',{onClick:()=>moveItem(idx,-1),style:{background:'none',border:'none',cursor:'pointer',padding:4,color:'var(--color-text-secondary)',display:'flex'}},React.createElement(IcArrow,{dir:'up'})),
             idx < canvas.length - 1 && React.createElement('button',{onClick:()=>moveItem(idx,1),style:{background:'none',border:'none',cursor:'pointer',padding:4,color:'var(--color-text-secondary)',display:'flex'}},React.createElement(IcArrow,{dir:'down'})),
@@ -483,6 +480,7 @@ function App(){
   const [pageSetups,setPageSetups]=useState([]);
   const [sitemap,setSitemap]=useState(null);
   const [canvas,setCanvas]=useState([]);
+  
   const smRef=useRef(null);
   const wfRef=useRef(null);
 
@@ -490,6 +488,7 @@ function App(){
     name:['Services','Projects','About','Contact','Blog','Portfolio','Gallery','Shop'][i]||`Page ${i+1}`,
     subs:[4,4,2,1,0,0,0,0][i]??0
   })));
+  
   const build=()=>{
     setSitemap({
       home:{id:uid(),label:'Home'},
@@ -499,29 +498,62 @@ function App(){
     });
     setTab('sitemap');
   };
+
   const exportPDF=()=>{
-    const ref=tab==='sitemap'?smRef:wfRef;
+    const ref = tab==='sitemap' ? smRef : wfRef;
     if(!ref.current){alert('Nothing to export yet.');return;}
-    const title=tab==='sitemap'?'Sitemap':'Wireframe — Home Page';
+    
+    const title = tab==='sitemap' ? 'Sitemap' : 'Wireframe \u2014 Home Page';
+    
+    // Dynamically calculate the perfect "One-Pager" size based on user's exact content height
+    const scrollW = ref.current.scrollWidth;
+    const scrollH = ref.current.scrollHeight;
+    const pageW = Math.max(1000, scrollW + 120);
+    const pageH = Math.max(800, scrollH + 250);
+
     const w=window.open('','_blank','width=1000,height=800');
     if(!w){alert('Allow popups to export PDF');return;}
-    w.document.write(`<!DOCTYPE html><html><head><title>${proj||'Project'} — ${title}</title><style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#111;padding:44px 52px;}
-.header{margin-bottom:36px;border-bottom:1px solid #eee;padding-bottom:20px;}
-.header h1{font-size:22px;font-weight:400;font-style:italic;letter-spacing:-0.01em;color:#111;}
-.header p{font-size:10px;color:#999;font-family:monospace;letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;}
-button,input,.nd,.dh,.rm{display:none!important;}
-textarea{border:none!important;background:none!important;resize:none!important;padding:0!important;font-weight:500;}
-@media print{@page{margin:12mm;size:A4;}}
-</style></head><body>
-<div class="header"><h1>${proj||'Client Project'}</h1><p>${title}</p></div>
-${ref.current.innerHTML}
-<script>setTimeout(()=>window.print(),350);<\/script></body></html>`);
+
+    const appStyles = document.querySelector('style')?.outerHTML || '';
+    
+    // Safely copy all textarea values to inner content so they print exactly as typed
+    const clone = ref.current.cloneNode(true);
+    const originalTAs = ref.current.querySelectorAll('textarea');
+    const clonedTAs = clone.querySelectorAll('textarea');
+    originalTAs.forEach((ta, i) => {
+        clonedTAs[i].textContent = ta.value;
+        clonedTAs[i].style.height = ta.scrollHeight + 'px'; // Auto-expand height so no text is cut off
+    });
+
+    w.document.write(`<!DOCTYPE html><html><head><title>${proj||'Project'} \u2014 ${title}</title>
+    ${appStyles}
+    <style>
+    /* Force completely custom one-pager PDF size */
+    @page { size: ${pageW}px ${pageH}px; margin: 0; }
+    
+    /* Perfect exact color printing */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    
+    body { background: var(--color-background-primary) !important; padding: 40px 60px !important; margin: 0; color: var(--color-text-primary); }
+    .header { margin-bottom: 30px; border-bottom: 1px solid var(--color-border-secondary); padding-bottom: 20px; }
+    .header h1 { font-family: var(--font-serif); font-size: 28px; color: var(--color-text-primary); font-style: italic; font-weight: normal; margin-bottom: 4px; }
+    .header p { font-family: var(--font-mono); font-size: 12px; color: var(--color-text-tertiary); letter-spacing: 0.1em; text-transform: uppercase; }
+    
+    /* Remove all interactive elements */
+    button, .nd, .dh, .rm, .tb, .gb, .ab, .an, .wf-sidebar, .dz { display: none !important; }
+    
+    /* Allow layout to expand fully */
+    .app-export-ref { overflow: visible !important; height: auto !important; max-height: none !important; background: transparent !important; border: none !important; margin: 0 !important; }
+    textarea { resize: none !important; overflow: hidden !important; border: 1px solid transparent !important; }
+    </style></head><body>
+    <div class="header"><h1>${proj||'Client Project'}</h1><p>${title}</p></div>
+    ${clone.outerHTML}
+    <script>setTimeout(()=>window.print(), 500);<\/script>
+    </body></html>`);
     w.document.close();
   };
 
-  /* ── Setup ── */
+  /* ── Setup Flow ── */
   if(!sitemap){
     const divider=React.createElement('div',{style:{height:1,background:'var(--color-border-secondary)',margin:'20px 0'}});
     const lbl=txt=>React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--color-text-tertiary)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:12}},txt);
@@ -579,8 +611,8 @@ ${ref.current.innerHTML}
     );
   }
 
-  /* ── Main tool ── */
-  return React.createElement('div',{style:{display:'flex',flexDirection:'column',minHeight:560, height:'100vh'}},
+  /* ── Main App Display ── */
+  return React.createElement('div',{style:{display:'flex',flexDirection:'column', height:'100vh', overflow:'hidden'}},
     React.createElement('div',{style:{display:'flex',alignItems:'center',borderBottom:`1px solid var(--color-border-secondary)`,background:'var(--color-background-primary)',padding:'0 16px',gap:2,flexShrink:0}},
       proj&&React.createElement('span',{style:{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:15,color:'var(--color-text-primary)',marginRight:10,paddingRight:10,borderRight:`1px solid var(--color-border-secondary)`,whiteSpace:'nowrap'}},proj),
       React.createElement('button',{className:`tb${tab==='sitemap'?' on':''}`,onClick:()=>setTab('sitemap')},'Sitemap'),
@@ -589,8 +621,8 @@ ${ref.current.innerHTML}
       React.createElement('button',{className:'gb',onClick:()=>{if(confirm('Are you sure you want to start over?')) {setSitemap(null);setStep(1);}},style:{fontSize:12,padding:'6px 12px',borderRadius:'var(--border-radius-md)',marginRight:8}},'New'),
       React.createElement('button',{className:'ab',onClick:exportPDF,style:{fontSize:12,padding:'7px 16px',borderRadius:'var(--border-radius-md)'}},'\u2193 Export PDF')
     ),
-    tab==='sitemap'&&React.createElement('div',{ref:smRef,style:{flex:1,overflowY:'auto', background:'var(--color-background-primary)'}},React.createElement(SitemapView,{sitemap,setSitemap})),
-    tab==='wireframe'&&React.createElement('div',{ref:wfRef,style:{flex:1,overflow:'hidden',display:'flex',flexDirection:'column'}},React.createElement(WireframeView,{canvas,setCanvas}))
+    tab==='sitemap'&&React.createElement(SitemapView,{sitemap,setSitemap,exportRef:smRef}),
+    tab==='wireframe'&&React.createElement(WireframeView,{canvas,setCanvas,exportRef:wfRef})
   );
 }
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));

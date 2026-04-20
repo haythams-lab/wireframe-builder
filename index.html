@@ -1,135 +1,86 @@
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sitemap & Wireframe Builder</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--font-sans);}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── Palette item ── */
-.pi{
-  padding:7px 10px 7px 14px;font-size:11.5px;border-radius:8px;
-  border:0.5px solid var(--color-border-tertiary);
-  background:var(--color-background-primary);
-  color:var(--color-text-secondary);cursor:grab;user-select:none;
-  transition:background .14s,color .14s,border-color .14s,transform .12s;
-  margin-bottom:3px;display:block;position:relative;overflow:hidden;
-}
-.pi::before{
-  content:'';position:absolute;left:0;top:18%;bottom:18%;
-  width:2.5px;background:#EF9F27;border-radius:2px;
-  opacity:0;transition:opacity .15s;
-}
-.pi:hover{
-  background:var(--color-background-secondary);color:var(--color-text-primary);
-  border-color:var(--color-border-secondary);transform:translateX(2px);
-}
-.pi:hover::before{opacity:1;}
-
-/* ── Tab button ── */
-.tb{
-  padding:0 18px;height:44px;border:none;border-bottom:2px solid transparent;
-  background:none;font-size:12.5px;font-family:var(--font-sans);cursor:pointer;
-  transition:color .15s,border-color .15s;
-  color:var(--color-text-tertiary);letter-spacing:0.015em;
-}
-.tb.on{color:var(--color-text-primary);font-weight:500;border-bottom-color:#EF9F27;}
-.tb:hover:not(.on){color:var(--color-text-secondary);}
-
-/* ── Circle button ── */
-.cb{
-  width:32px;height:32px;border-radius:50%;
-  border:0.5px solid var(--color-border-secondary);
-  background:none;cursor:pointer;
-  transition:background .12s,border-color .12s,transform .08s;
-  display:flex;align-items:center;justify-content:center;
-  font-size:17px;line-height:1;color:var(--color-text-secondary);
-}
-.cb:hover{background:var(--color-background-secondary);border-color:var(--color-border-primary);color:var(--color-text-primary);}
-.cb:active{transform:scale(.88);}
-
-/* ── Amber (primary) button ── */
-.ab{
-  background:#EF9F27;color:#3D2000;border:none;cursor:pointer;
-  font-family:var(--font-sans);font-weight:600;letter-spacing:0.01em;
-  transition:filter .14s,transform .08s,box-shadow .18s;
-  box-shadow:0 1px 4px rgba(239,159,39,0.3),0 0 0 0 rgba(239,159,39,0),inset 0 1px 0 rgba(255,255,255,0.18);
-}
-.ab:hover{
-  filter:brightness(1.08);
-  box-shadow:0 4px 16px rgba(239,159,39,0.42),inset 0 1px 0 rgba(255,255,255,0.18);
-}
-.ab:active{transform:scale(.97);filter:brightness(.96);}
-
-/* ── Ghost button ── */
-.gb{
-  background:none;border:0.5px solid var(--color-border-secondary);
-  color:var(--color-text-secondary);cursor:pointer;font-family:var(--font-sans);
-  transition:background .12s,color .12s,border-color .12s;
-}
-.gb:hover{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);}
-
-/* ── Add-node dashed button ── */
-.an{
-  background:none;border:0.5px dashed var(--color-border-secondary);border-radius:14px;
-  font-size:10px;color:var(--color-text-tertiary);cursor:pointer;font-family:var(--font-sans);
-  transition:border-color .12s,color .12s,background .12s;
-  padding:4px 10px;line-height:1.6;display:inline-flex;align-items:center;gap:4px;
-}
-.an:hover{border-style:solid;border-color:#EF9F27;color:#EF9F27;background:rgba(239,159,39,0.06);}
-
-/* ── Standard input ── */
-.si{
-  font-family:var(--font-sans);font-size:13px;padding:10px 14px;
-  border:0.5px solid var(--color-border-secondary);border-radius:10px;
-  background:var(--color-background-secondary);color:var(--color-text-primary);
-  outline:none;width:100%;transition:border-color .16s,box-shadow .16s,background .16s;
-}
-.si::placeholder{color:var(--color-text-tertiary);}
-.si:focus{
-  border-color:#EF9F27;background:var(--color-background-primary);
-  box-shadow:0 0 0 3px rgba(239,159,39,0.12);
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f8fafc;
+  --color-background-app: #e2e8f0;
+  
+  --color-border-primary: #cbd5e1;
+  --color-border-secondary: #e2e8f0;
+  --color-border-tertiary: #f1f5f9;
+  
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-tertiary: #64748b;
+  --color-text-warning: #f59e0b;
+  
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
 }
 
-/* ── Node inline input ── */
-.ni{
-  font-family:var(--font-sans);font-size:11px;padding:4px 10px;
-  border:1px solid #EF9F27;border-radius:12px;
-  background:var(--color-background-primary);color:var(--color-text-primary);
-  outline:none;box-shadow:0 0 0 3px rgba(239,159,39,0.15);
-  transition:box-shadow .12s;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: var(--color-background-secondary); }
+body { font-family: var(--font-sans); color: var(--color-text-primary); }
+
+/* Custom Scrollbars for Desktop */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-primary); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-tertiary); }
+
+.pi { padding: 12px 16px; font-size: 13px; font-weight: 500; border-radius: var(--border-radius-md); border: 1px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: grab; user-select: none; transition: all .2s cubic-bezier(0.16, 1, 0.3, 1); margin-bottom: 6px; display: block; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+.pi:hover { background: #ffffff; color: var(--color-text-primary); border-color: #EF9F27; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239, 159, 39, 0.15); }
+.tb { padding: 16px 24px; border: none; border-bottom: 3px solid transparent; background: none; font-size: 15px; font-weight: 500; font-family: var(--font-sans); cursor: pointer; transition: color .15s, border-color .15s; color: var(--color-text-tertiary); }
+.tb.on { color: var(--color-text-primary); font-weight: 600; border-bottom-color: #EF9F27; }
+.tb:hover:not(.on) { color: var(--color-text-secondary); }
+.cb { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--color-border-secondary); background: var(--color-background-primary); cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; font-size: 20px; line-height: 1; color: var(--color-text-secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.cb:hover { background: var(--color-background-secondary); border-color: #EF9F27; color: #EF9F27; transform: scale(1.05); }
+.ab { background: #EF9F27; color: #ffffff; border: none; cursor: pointer; font-family: var(--font-sans); font-weight: 600; transition: all .2s; box-shadow: 0 4px 12px rgba(239, 159, 39, 0.3); }
+.ab:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(239, 159, 39, 0.4); }
+.ab:active { transform: scale(.98); }
+.gb { background: var(--color-background-primary); border: 1px solid var(--color-border-primary); color: var(--color-text-secondary); cursor: pointer; font-family: var(--font-sans); font-weight: 500; transition: all .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.gb:hover { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-text-secondary); }
+.an { background: var(--color-background-primary); border: 1px dashed var(--color-border-primary); border-radius: 12px; font-size: 12px; font-weight: 500; color: var(--color-text-tertiary); cursor: pointer; font-family: var(--font-sans); transition: all .2s; padding: 6px 14px; line-height: 1.6; display: inline-flex; align-items: center; gap: 6px; }
+.an:hover { border-style: solid; border-color: #EF9F27; color: #EF9F27; background: #fffcf8; }
+.si { font-family: var(--font-sans); font-size: 15px; padding: 14px 18px; border: 1.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); outline: none; width: 100%; transition: border-color .2s, box-shadow .2s; }
+.si:focus { border-color: #EF9F27; box-shadow: 0 0 0 3px rgba(239, 159, 39, 0.15); }
+.ni { font-family: var(--font-sans); font-size: 13px; padding: 4px 10px; border: 1.5px solid #EF9F27; border-radius: 12px; background: var(--color-background-primary); color: var(--color-text-primary); outline: none; transition: border-color .12s; box-shadow: 0 0 0 3px rgba(239, 159, 39, 0.15); }
+.cr .rm, .cr .dh { opacity: 0; transition: opacity .2s; }
+.cr:hover .rm, .cr:hover .dh { opacity: 1; }
+.nw .nd { opacity: 0; transition: opacity .2s; }
+.nw:hover .nd { opacity: 1; }
+.dz { height: 16px; border-radius: 4px; border: 2px dashed transparent; transition: all .2s; cursor: copy; margin: -4px 0; z-index: 10; position: relative; }
+.dz.hot { border-color: #EF9F27; background: rgba(239, 159, 39, 0.05); transform: scaleY(1.5); }
+
+/* Pro background for canvases */
+.canvas-bg {
+  background-color: var(--color-background-secondary);
+  background-image: radial-gradient(var(--color-border-primary) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
-
-/* ── Component row hover ── */
-.cr .rm,.cr .dh{opacity:0;transition:opacity .14s;}
-.cr:hover .rm,.cr:hover .dh{opacity:1;}
-.cr{transition:background .15s;}
-.cr:hover{background:rgba(80,80,120,0.018);}
-
-/* ── Node wrapper hover ── */
-.nw .nd{opacity:0;transition:opacity .12s;}
-.nw:hover .nd{opacity:1;}
-
-/* ── Drop zone ── */
-.dz{
-  height:6px;border-top:2px solid transparent;
-  transition:border-top-color .14s,height .15s,background .14s;cursor:copy;
-}
-.dz.hot{height:16px;border-top-color:#EF9F27;background:rgba(239,159,39,0.05);}
-
-/* ── Scrollbar ── */
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(80,80,120,0.18);border-radius:4px;}
-::-webkit-scrollbar-thumb:hover{background:rgba(80,80,120,0.3);}
 </style>
+</head>
+<body>
 <div id="root"></div>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script>
-const {useState,useRef}=React;
-let _n=0;const uid=()=>++_n;
-const G=op=>`rgba(80,80,120,${op})`;
-const A='#EF9F27',AT='#3D2000';
-const SF="'DM Serif Display',Georgia,serif";
+const {useState, useRef} = React;
+let _n=0; const uid=()=>++_n;
+const G = op => `rgba(80,80,120,${op})`;
+const A = '#EF9F27', AT = '#ffffff';
 
 const PALETTE=[
   {t:'navbar',l:'Navigation Bar',c:'Structure'},{t:'hero',l:'Hero / Banner',c:'Structure'},
@@ -143,178 +94,178 @@ const PALETTE=[
   {t:'timeline',l:'Timeline',c:'Content'},{t:'footer',l:'Footer',c:'Structure'},
 ];
 
-const L=({w='60%',h=7,op=0.3})=>React.createElement('div',{style:{height:h,width:w,background:G(op),borderRadius:2,flexShrink:0}});
-const Im=({w='100%',h=70})=>React.createElement('div',{style:{width:w,height:h,background:G(0.06),border:`1px dashed ${G(0.18)}`,borderRadius:5,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}},
-  React.createElement('svg',{width:13,height:13,viewBox:'0 0 24 24',fill:'none',stroke:G(0.28),strokeWidth:'1.5'},
+const L=({w='60%',h=9,op=0.3})=>React.createElement('div',{style:{height:h,width:w,background:G(op),borderRadius:4,flexShrink:0}});
+const Im=({w='100%',h=100})=>React.createElement('div',{style:{width:w,height:h,background:G(0.05),border:`2px dashed ${G(0.15)}`,borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}},
+  React.createElement('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:G(0.32),strokeWidth:'1.5'},
     React.createElement('rect',{x:3,y:3,width:18,height:18,rx:2}),React.createElement('circle',{cx:8.5,cy:8.5,r:1.5}),React.createElement('path',{d:'M21 15l-5-5L5 21'})
   )
 );
-const Bt=({dk=true})=>React.createElement('div',{style:{height:20,padding:'0 12px',background:dk?G(0.5):'transparent',border:`1.5px solid ${G(dk?0.4:0.25)}`,borderRadius:10,display:'inline-flex',alignItems:'center',flexShrink:0}},
-  React.createElement('div',{style:{height:5,width:28,background:dk?'rgba(255,255,255,0.35)':G(0.28),borderRadius:2}})
+const Bt=({dk=true})=>React.createElement('div',{style:{height:32,padding:'0 18px',background:dk?G(0.7):'transparent',border:`2px solid ${G(dk?0.7:0.3)}`,borderRadius:16,display:'inline-flex',alignItems:'center',flexShrink:0}},
+  React.createElement('div',{style:{height:6,width:36,background:dk?'rgba(255,255,255,0.7)':G(0.5),borderRadius:3}})
 );
-const Ci=({s=24,c='#8888BB'})=>React.createElement('div',{style:{width:s,height:s,borderRadius:'50%',background:c,flexShrink:0}});
+const Ci=({s=32,c='#8888BB'})=>React.createElement('div',{style:{width:s,height:s,borderRadius:'50%',background:c,flexShrink:0}});
 
 function WFB({type}){
-  const P={padding:'10px 12px',display:'flex',flexDirection:'column',gap:5};
-  const R={display:'flex',gap:7};
+  const P={padding:'24px 32px',display:'flex',flexDirection:'column',gap:10};
+  const R={display:'flex',gap:14};
   const m={
-    navbar:React.createElement('div',{style:{...P,flexDirection:'row',alignItems:'center',background:G(0.03),padding:'7px 12px',gap:8}},
-      React.createElement(Ci,{s:24}),
-      React.createElement('div',{style:{display:'flex',gap:6,flex:1}},[36,28,24,32].map((w,i)=>React.createElement('div',{key:i,style:{height:6,width:w,background:G(0.26),borderRadius:2}}))),
-      React.createElement('div',{style:{display:'flex',gap:5}},React.createElement(Bt,{dk:true}),React.createElement(Bt,{dk:false}))
+    navbar:React.createElement('div',{style:{...P,flexDirection:'row',alignItems:'center',background:G(0.02),padding:'16px 32px',gap:16}},
+      React.createElement(Ci,{s:36}),
+      React.createElement('div',{style:{display:'flex',gap:12,flex:1}},[48,36,32,42].map((w,i)=>React.createElement('div',{key:i,style:{height:8,width:w,background:G(0.26),borderRadius:4}}))),
+      React.createElement('div',{style:{display:'flex',gap:8}},React.createElement(Bt,{dk:true}),React.createElement(Bt,{dk:false}))
     ),
-    hero:React.createElement('div',{style:{...P,flexDirection:'row',gap:12,alignItems:'center',minHeight:80}},
-      React.createElement(Im,{w:'42%',h:82}),
-      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:5}},
-        React.createElement(L,{w:'80%',h:11,op:0.38}),React.createElement(L,{w:'60%',h:11,op:0.38}),React.createElement(L,{w:'90%',h:5}),React.createElement(L,{w:'72%',h:5}),
-        React.createElement('div',{style:{marginTop:3}},React.createElement(Bt,{dk:true}))
+    hero:React.createElement('div',{style:{...P,flexDirection:'row',gap:24,alignItems:'center',minHeight:140}},
+      React.createElement(Im,{w:'45%',h:120}),
+      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:8}},
+        React.createElement(L,{w:'80%',h:16,op:0.4}),React.createElement(L,{w:'60%',h:16,op:0.4}),React.createElement(L,{w:'90%',h:8}),React.createElement(L,{w:'72%',h:8}),
+        React.createElement('div',{style:{marginTop:8}},React.createElement(Bt,{dk:true}))
       )
     ),
-    video:React.createElement('div',{style:{...P,alignItems:'center',padding:'12px 32px'}},
-      React.createElement('div',{style:{width:'100%',maxWidth:240,height:66,background:G(0.06),borderRadius:5,display:'flex',alignItems:'center',justifyContent:'center',border:`1.5px solid ${G(0.1)}`}},
-        React.createElement('div',{style:{width:22,height:22,borderRadius:'50%',border:`2px solid ${G(0.24)}`,display:'flex',alignItems:'center',justifyContent:'center'}},
-          React.createElement('div',{style:{width:0,height:0,borderTop:'5px solid transparent',borderBottom:'5px solid transparent',borderLeft:`7px solid ${G(0.3)}`,marginLeft:2}})
+    video:React.createElement('div',{style:{...P,alignItems:'center',padding:'24px 48px'}},
+      React.createElement('div',{style:{width:'100%',maxWidth:360,height:120,background:G(0.07),borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',border:`2px solid ${G(0.11)}`}},
+        React.createElement('div',{style:{width:36,height:36,borderRadius:'50%',border:`3px solid ${G(0.26)}`,display:'flex',alignItems:'center',justifyContent:'center'}},
+          React.createElement('div',{style:{width:0,height:0,borderTop:'7px solid transparent',borderBottom:'7px solid transparent',borderLeft:`10px solid ${G(0.32)}`,marginLeft:4}})
         )
       ),
-      React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:3,marginTop:6}},React.createElement(L,{w:'50%',h:7,op:0.33}),React.createElement(L,{w:'38%',h:5}))
+      React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:6,marginTop:12}},React.createElement(L,{w:'50%',h:10,op:0.33}),React.createElement(L,{w:'38%',h:6}))
     ),
     steps3:React.createElement('div',{style:P},
-      React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:3}},React.createElement(L,{w:'38%',h:8,op:0.33})),
-      React.createElement('div',{style:{...R,marginTop:3}},
-        [0,1,2].map(i=>React.createElement('div',{key:i,style:{flex:1,background:G(0.04),borderRadius:5,padding:'8px 7px',display:'flex',flexDirection:'column',gap:4,alignItems:'center'}},
-          React.createElement(Ci,{s:20}),React.createElement(L,{w:'68%',h:6,op:0.33}),React.createElement(L,{w:'82%',h:4}),React.createElement(L,{w:'62%',h:4})
+      React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:6}},React.createElement(L,{w:'38%',h:12,op:0.33})),
+      React.createElement('div',{style:{...R,marginTop:8}},
+        [0,1,2].map(i=>React.createElement('div',{key:i,style:{flex:1,background:G(0.03),borderRadius:8,padding:'16px 12px',display:'flex',flexDirection:'column',gap:8,alignItems:'center'}},
+          React.createElement(Ci,{s:28}),React.createElement(L,{w:'68%',h:8,op:0.33}),React.createElement(L,{w:'82%',h:6}),React.createElement(L,{w:'62%',h:6})
         ))
       )
     ),
-    split2:React.createElement('div',{style:{...P,flexDirection:'row',gap:10,minHeight:75}},
-      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:4}},
-        React.createElement(L,{w:'48%',h:8,op:0.33}),React.createElement(L,{w:'88%',h:5}),React.createElement(L,{w:'78%',h:5}),React.createElement(L,{w:'68%',h:5}),
-        React.createElement('div',{style:{marginTop:3}},React.createElement(Bt,{dk:false}))
+    split2:React.createElement('div',{style:{...P,flexDirection:'row',gap:20,minHeight:120}},
+      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:8,justifyContent:'center'}},
+        React.createElement(L,{w:'48%',h:12,op:0.33}),React.createElement(L,{w:'88%',h:7}),React.createElement(L,{w:'78%',h:7}),React.createElement(L,{w:'68%',h:7}),
+        React.createElement('div',{style:{marginTop:6}},React.createElement(Bt,{dk:false}))
       ),
-      React.createElement('div',{style:{flex:1}},React.createElement(Im,{w:'100%',h:82}))
+      React.createElement('div',{style:{flex:1}},React.createElement(Im,{w:'100%',h:130}))
     ),
-    stats:React.createElement('div',{style:{...P,flexDirection:'row',background:G(0.04),padding:'12px'}},
-      [0,1,2,3].map(i=>React.createElement('div',{key:i,style:{flex:1,display:'flex',flexDirection:'column',gap:3,alignItems:'center',padding:'5px',borderRight:i<3?`1px solid ${G(0.08)}`:'none'}},
-        React.createElement(L,{w:'50%',h:14,op:0.34}),React.createElement(L,{w:'62%',h:5})
+    stats:React.createElement('div',{style:{...P,flexDirection:'row',background:G(0.03),padding:'24px'}},
+      [0,1,2,3].map(i=>React.createElement('div',{key:i,style:{flex:1,display:'flex',flexDirection:'column',gap:6,alignItems:'center',padding:'8px',borderRight:i<3?`1px solid ${G(0.08)}`:'none'}},
+        React.createElement(L,{w:'50%',h:22,op:0.4}),React.createElement(L,{w:'62%',h:8})
       ))
     ),
     cards4:React.createElement('div',{style:P},
-      React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:3}},React.createElement(L,{w:'32%',h:8,op:0.33})),
-      React.createElement('div',{style:{...R,marginTop:3}},
-        [0,1,2,3].map(i=>React.createElement('div',{key:i,style:{flex:1,background:G(0.04),borderRadius:5,padding:7,display:'flex',flexDirection:'column',gap:3}},
-          React.createElement(Im,{h:36}),React.createElement(Ci,{s:16}),React.createElement(L,{w:'78%',h:6,op:0.28}),React.createElement(L,{w:'65%',h:4}),
-          React.createElement('div',{style:{marginTop:2}},React.createElement(Bt,{dk:true}))
+      React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:6}},React.createElement(L,{w:'32%',h:12,op:0.33})),
+      React.createElement('div',{style:{...R,marginTop:8}},
+        [0,1,2,3].map(i=>React.createElement('div',{key:i,style:{flex:1,background:G(0.03),borderRadius:8,padding:12,display:'flex',flexDirection:'column',gap:6}},
+          React.createElement(Im,{h:60}),React.createElement(Ci,{s:20}),React.createElement(L,{w:'78%',h:8,op:0.28}),React.createElement(L,{w:'65%',h:6}),
+          React.createElement('div',{style:{marginTop:6}},React.createElement(Bt,{dk:true}))
         ))
       )
     ),
     cards3:React.createElement('div',{style:P},
-      React.createElement(L,{w:'32%',h:8,op:0.33}),
-      React.createElement('div',{style:{...R,marginTop:3}},
-        [0,1,2].map(i=>React.createElement('div',{key:i,style:{flex:1,background:G(0.04),borderRadius:5,padding:7,display:'flex',flexDirection:'column',gap:3}},
-          React.createElement(Im,{h:46}),React.createElement(L,{w:'76%',h:7,op:0.28}),React.createElement(L,{w:'88%',h:4}),React.createElement(L,{w:'67%',h:4})
+      React.createElement(L,{w:'32%',h:12,op:0.33}),
+      React.createElement('div',{style:{...R,marginTop:8}},
+        [0,1,2].map(i=>React.createElement('div',{key:i,style:{flex:1,background:G(0.03),borderRadius:8,padding:12,display:'flex',flexDirection:'column',gap:6}},
+          React.createElement(Im,{h:80}),React.createElement(L,{w:'76%',h:10,op:0.28}),React.createElement(L,{w:'88%',h:6}),React.createElement(L,{w:'67%',h:6})
         ))
       )
     ),
     testimonials:React.createElement('div',{style:P},
-      React.createElement(L,{w:'28%',h:8,op:0.3}),
-      React.createElement('div',{style:{...R,marginTop:3}},
-        [0,1,2].map(i=>React.createElement('div',{key:i,style:{flex:1,background:G(0.04),borderRadius:5,padding:'8px 7px',display:'flex',flexDirection:'column',gap:4}},
-          React.createElement('div',{style:{display:'flex',gap:2}},[0,1,2,3,4].map(j=>React.createElement('div',{key:j,style:{width:8,height:8,background:A,opacity:0.7,clipPath:'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)'}}))),
-          React.createElement(L,{w:'88%',h:4}),React.createElement(L,{w:'72%',h:4}),React.createElement(L,{w:'52%',h:4}),
-          React.createElement('div',{style:{display:'flex',gap:4,alignItems:'center',marginTop:2}},React.createElement(Ci,{s:14,c:'#bbb'}),React.createElement(L,{w:'48%',h:4,op:0.33}))
+      React.createElement(L,{w:'28%',h:12,op:0.3}),
+      React.createElement('div',{style:{...R,marginTop:8}},
+        [0,1,2].map(i=>React.createElement('div',{key:i,style:{flex:1,background:G(0.03),borderRadius:8,padding:'16px 14px',display:'flex',flexDirection:'column',gap:8}},
+          React.createElement('div',{style:{display:'flex',gap:4}},[0,1,2,3,4].map(j=>React.createElement('div',{key:j,style:{width:12,height:12,background:A,opacity:0.8,clipPath:'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)'}}))),
+          React.createElement(L,{w:'88%',h:6}),React.createElement(L,{w:'72%',h:6}),React.createElement(L,{w:'52%',h:6}),
+          React.createElement('div',{style:{display:'flex',gap:8,alignItems:'center',marginTop:6}},React.createElement(Ci,{s:20,c:'#bbb'}),React.createElement(L,{w:'48%',h:6,op:0.33}))
         ))
       )
     ),
     logos:React.createElement('div',{style:{...P,alignItems:'center'}},
-      React.createElement(L,{w:'32%',h:6,op:0.24}),
-      React.createElement('div',{style:{display:'flex',gap:10,marginTop:5,justifyContent:'center'}},
-        [0,1,2,3,4].map(i=>React.createElement('div',{key:i,style:{width:44,height:16,background:G(0.1),borderRadius:3}}))
+      React.createElement(L,{w:'32%',h:8,op:0.24}),
+      React.createElement('div',{style:{display:'flex',gap:24,marginTop:12,justifyContent:'center'}},
+        [0,1,2,3,4].map(i=>React.createElement('div',{key:i,style:{width:60,height:24,background:G(0.1),borderRadius:4}}))
       )
     ),
     faq:React.createElement('div',{style:{...P,maxWidth:'80%',margin:'0 auto'}},
-      React.createElement(L,{w:'38%',h:8,op:0.3}),
-      [0,1,2,3,4].map(i=>React.createElement('div',{key:i,style:{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'5px 0',borderBottom:`1px solid ${G(0.09)}`}},
-        React.createElement(L,{w:`${52+i*4}%`,h:5,op:0.24}),
-        React.createElement('div',{style:{width:8,height:8,borderRight:`2px solid ${G(0.28)}`,borderBottom:`2px solid ${G(0.28)}`,transform:'rotate(45deg)',marginTop:-4,flexShrink:0}})
+      React.createElement(L,{w:'38%',h:12,op:0.3}),
+      [0,1,2,3,4].map(i=>React.createElement('div',{key:i,style:{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 0',borderBottom:`1px solid ${G(0.09)}`}},
+        React.createElement(L,{w:`${52+i*4}%`,h:7,op:0.24}),
+        React.createElement('div',{style:{width:10,height:10,borderRight:`2px solid ${G(0.28)}`,borderBottom:`2px solid ${G(0.28)}`,transform:'rotate(45deg)',marginTop:-4,flexShrink:0}})
       ))
     ),
-    casestudies:React.createElement('div',{style:{...P,flexDirection:'row',gap:12}},
-      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:4}},
-        React.createElement(L,{w:'38%',h:8,op:0.3}),React.createElement(L,{w:'88%',h:5}),React.createElement(L,{w:'78%',h:5}),React.createElement(L,{w:'62%',h:5}),
-        React.createElement('div',{style:{marginTop:3}},React.createElement(Bt,{dk:false}))
+    casestudies:React.createElement('div',{style:{...P,flexDirection:'row',gap:24}},
+      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:8,justifyContent:'center'}},
+        React.createElement(L,{w:'38%',h:12,op:0.3}),React.createElement(L,{w:'88%',h:7}),React.createElement(L,{w:'78%',h:7}),React.createElement(L,{w:'62%',h:7}),
+        React.createElement('div',{style:{marginTop:6}},React.createElement(Bt,{dk:false}))
       ),
-      React.createElement('div',{style:{flex:1}},React.createElement(Im,{w:'100%',h:74}))
+      React.createElement('div',{style:{flex:1}},React.createElement(Im,{w:'100%',h:120}))
     ),
-    cta:React.createElement('div',{style:{background:G(0.08),padding:'12px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:14}},
-      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:4}},
-        React.createElement(L,{w:'62%',h:9,op:0.44}),React.createElement(L,{w:'48%',h:5,op:0.26})
+    cta:React.createElement('div',{style:{background:G(0.07),padding:'24px 32px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:24}},
+      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:8}},
+        React.createElement(L,{w:'62%',h:14,op:0.44}),React.createElement(L,{w:'48%',h:7,op:0.26})
       ),
       React.createElement(Bt,{dk:true})
     ),
     team:React.createElement('div',{style:P},
-      React.createElement(L,{w:'28%',h:8,op:0.3}),
-      React.createElement('div',{style:{...R,marginTop:3}},
-        [0,1,2,3].map(i=>React.createElement('div',{key:i,style:{flex:1,display:'flex',flexDirection:'column',gap:3,alignItems:'center'}},
-          React.createElement(Im,{h:50}),React.createElement(L,{w:'68%',h:6,op:0.28}),React.createElement(L,{w:'52%',h:4})
+      React.createElement(L,{w:'28%',h:12,op:0.3}),
+      React.createElement('div',{style:{...R,marginTop:8}},
+        [0,1,2,3].map(i=>React.createElement('div',{key:i,style:{flex:1,display:'flex',flexDirection:'column',gap:6,alignItems:'center'}},
+          React.createElement(Im,{h:80}),React.createElement(L,{w:'68%',h:8,op:0.28}),React.createElement(L,{w:'52%',h:6})
         ))
       )
     ),
     gallery:React.createElement('div',{style:P},
-      React.createElement(L,{w:'28%',h:8,op:0.3}),
-      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:4,marginTop:3}},
-        [76,48,62,52,76,48].map((h,i)=>React.createElement(Im,{key:i,h}))
+      React.createElement(L,{w:'28%',h:12,op:0.3}),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,marginTop:8}},
+        [120,80,100,80,120,80].map((h,i)=>React.createElement(Im,{key:i,h}))
       )
     ),
     form:React.createElement('div',{style:{...P,maxWidth:'66%',margin:'0 auto'}},
-      React.createElement(L,{w:'32%',h:8,op:0.3}),
-      React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:6,marginTop:3}},
-        [0,1].map(i=>React.createElement('div',{key:i,style:{display:'flex',gap:7}},
-          [0,1].map(j=>React.createElement('div',{key:j,style:{flex:1,height:24,background:G(0.05),borderRadius:4,border:`1px solid ${G(0.13)}`}}))
+      React.createElement(L,{w:'32%',h:12,op:0.3}),
+      React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:12,marginTop:8}},
+        [0,1].map(i=>React.createElement('div',{key:i,style:{display:'flex',gap:12}},
+          [0,1].map(j=>React.createElement('div',{key:j,style:{flex:1,height:36,background:G(0.04),borderRadius:6,border:`1px solid ${G(0.13)}`}}))
         )),
-        React.createElement('div',{style:{height:24,background:G(0.05),borderRadius:4,border:`1px solid ${G(0.13)}`}}),
-        React.createElement('div',{style:{height:50,background:G(0.05),borderRadius:4,border:`1px solid ${G(0.13)}`}}),
+        React.createElement('div',{style:{height:36,background:G(0.04),borderRadius:6,border:`1px solid ${G(0.13)}`}}),
+        React.createElement('div',{style:{height:80,background:G(0.04),borderRadius:6,border:`1px solid ${G(0.13)}`}}),
         React.createElement(Bt,{dk:true})
       )
     ),
     timeline:React.createElement('div',{style:P},
-      React.createElement(L,{w:'28%',h:8,op:0.3}),
-      React.createElement('div',{style:{marginTop:5,paddingLeft:18,borderLeft:`2px solid ${G(0.13)}`,display:'flex',flexDirection:'column',gap:9}},
-        [0,1,2].map(i=>React.createElement('div',{key:i,style:{display:'flex',gap:7,alignItems:'flex-start',position:'relative'}},
-          React.createElement('div',{style:{width:10,height:10,borderRadius:'50%',background:'#9090BB',position:'absolute',left:-24,top:2}}),
-          React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:2}},
-            React.createElement(L,{w:'48%',h:6,op:0.33}),React.createElement(L,{w:'76%',h:4}),React.createElement(L,{w:'62%',h:4})
+      React.createElement(L,{w:'28%',h:12,op:0.3}),
+      React.createElement('div',{style:{marginTop:12,paddingLeft:28,borderLeft:`3px solid ${G(0.13)}`,display:'flex',flexDirection:'column',gap:16}},
+        [0,1,2].map(i=>React.createElement('div',{key:i,style:{display:'flex',gap:12,alignItems:'flex-start',position:'relative'}},
+          React.createElement('div',{style:{width:16,height:16,borderRadius:'50%',background:'#9090BB',position:'absolute',left:-37,top:0}}),
+          React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:4}},
+            React.createElement(L,{w:'48%',h:8,op:0.33}),React.createElement(L,{w:'76%',h:6}),React.createElement(L,{w:'62%',h:6})
           )
         ))
       )
     ),
-    footer:React.createElement('div',{style:{background:G(0.08),padding:'12px',display:'flex',gap:10}},
-      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:4}},
-        React.createElement(Ci,{s:22}),React.createElement(L,{w:'68%',h:4}),React.createElement(L,{w:'52%',h:4})
+    footer:React.createElement('div',{style:{background:G(0.06),padding:'24px 32px',display:'flex',gap:20}},
+      React.createElement('div',{style:{flex:1,display:'flex',flexDirection:'column',gap:8}},
+        React.createElement(Ci,{s:36}),React.createElement(L,{w:'68%',h:6}),React.createElement(L,{w:'52%',h:6})
       ),
-      [0,1,2].map(i=>React.createElement('div',{key:i,style:{flex:1,display:'flex',flexDirection:'column',gap:3}},
-        React.createElement(L,{w:'48%',h:5,op:0.33}),[0,1,2].map(j=>React.createElement(L,{key:j,w:'58%',h:3,op:0.2}))
+      [0,1,2].map(i=>React.createElement('div',{key:i,style:{flex:1,display:'flex',flexDirection:'column',gap:6}},
+        React.createElement(L,{w:'48%',h:8,op:0.33}),[0,1,2].map(j=>React.createElement(L,{key:j,w:'58%',h:5,op:0.2}))
       )),
-      React.createElement('div',{style:{flex:0.8,display:'flex',flexDirection:'column',gap:4,alignItems:'flex-end'}},
+      React.createElement('div',{style:{flex:0.8,display:'flex',flexDirection:'column',gap:8,alignItems:'flex-end'}},
         React.createElement(Bt,{dk:true}),
-        React.createElement('div',{style:{display:'flex',gap:3,marginTop:3}},
-          [0,1,2].map(i=>React.createElement('div',{key:i,style:{width:14,height:14,borderRadius:'50%',background:G(0.15)}}))
+        React.createElement('div',{style:{display:'flex',gap:6,marginTop:8}},
+          [0,1,2].map(i=>React.createElement('div',{key:i,style:{width:24,height:24,borderRadius:'50%',background:G(0.15)}}))
         )
       )
     ),
   };
-  return m[type]||React.createElement('div',{style:{padding:12,textAlign:'center'}},React.createElement(L,{w:'48%',h:6,op:0.18}));
+  return m[type]||React.createElement('div',{style:{padding:24,textAlign:'center'}},React.createElement(L,{w:'48%',h:10,op:0.18}));
 }
 
-const IcX=({s=7})=>React.createElement('svg',{width:s,height:s,viewBox:'0 0 8 8',fill:'none',stroke:'currentColor',strokeWidth:1.6},
+const IcX=({s=10})=>React.createElement('svg',{width:s,height:s,viewBox:'0 0 8 8',fill:'none',stroke:'currentColor',strokeWidth:1.6},
   React.createElement('line',{x1:.5,y1:.5,x2:7.5,y2:7.5}),React.createElement('line',{x1:7.5,y1:.5,x2:.5,y2:7.5})
 );
-const IcEdit=()=>React.createElement('svg',{width:9,height:9,viewBox:'0 0 10 10',fill:'none',stroke:'currentColor',strokeWidth:1.4},
+const IcEdit=()=>React.createElement('svg',{width:12,height:12,viewBox:'0 0 10 10',fill:'none',stroke:'currentColor',strokeWidth:1.4},
   React.createElement('path',{d:'M1 7.5L2.5 9L9 2.5L7.5 1L1 7.5z'}),React.createElement('line',{x1:6.5,y1:1.5,x2:8.5,y2:3.5})
 );
-const IcPlus=({s=8})=>React.createElement('svg',{width:s,height:s,viewBox:'0 0 8 8',fill:'none',stroke:'currentColor',strokeWidth:1.6},
+const IcPlus=({s=12})=>React.createElement('svg',{width:s,height:s,viewBox:'0 0 8 8',fill:'none',stroke:'currentColor',strokeWidth:1.6},
   React.createElement('line',{x1:4,y1:.5,x2:4,y2:7.5}),React.createElement('line',{x1:.5,y1:4,x2:7.5,y2:4})
 );
-const IcGrip=()=>React.createElement('svg',{width:7,height:11,viewBox:'0 0 7 11',fill:'currentColor'},
+const IcGrip=()=>React.createElement('svg',{width:10,height:16,viewBox:'0 0 7 11',fill:'currentColor'},
   [0,1,2].flatMap(r=>[0,1].map(c=>React.createElement('circle',{key:`${r}${c}`,cx:c*3.5+1.5,cy:r*4+1.5,r:1})))
 );
 
@@ -322,23 +273,23 @@ function EditNode({label,onChange,onDelete,onAddChild,isMain,isCta}){
   const [ed,setEd]=useState(false);
   const [draft,setDraft]=useState(label);
   const commit=()=>{onChange(draft.trim()||label);setEd(false);};
-  if(ed)return React.createElement('input',{className:'ni',value:draft,onChange:e=>setDraft(e.target.value),onBlur:commit,onKeyDown:e=>{if(e.key==='Enter')commit();if(e.key==='Escape')setEd(false);},autoFocus,style:{width:Math.max(72,draft.length*7.5)}});
+  if(ed)return React.createElement('input',{className:'ni',value:draft,onChange:e=>setDraft(e.target.value),onBlur:commit,onKeyDown:e=>{if(e.key==='Enter')commit();if(e.key==='Escape')setEd(false);},autoFocus,style:{width:Math.max(100,draft.length*9)}});
   const pill={
     display:'inline-flex',alignItems:'center',whiteSpace:'nowrap',
-    background:isCta?A:isMain?'var(--color-text-primary)':'var(--color-background-secondary)',
+    background:isCta?A:isMain?'var(--color-text-primary)':'var(--color-background-primary)',
     color:isCta?AT:isMain?'var(--color-background-primary)':'var(--color-text-primary)',
-    border:`0.5px solid ${isCta||isMain?'transparent':'var(--color-border-secondary)'}`,
-    borderRadius:20,padding:isMain||isCta?'5px 14px':'4px 11px',
-    fontSize:11,fontWeight:isMain||isCta?500:400,cursor:'default',userSelect:'none',
-    boxShadow:isMain?'0 1px 3px rgba(0,0,0,0.12)':isCta?'0 1px 4px rgba(239,159,39,0.2)':'none',
+    border:`1px solid ${isCta||isMain?'transparent':'var(--color-border-primary)'}`,
+    borderRadius:24, padding:isMain||isCta?'8px 18px':'6px 14px',
+    fontSize:13, fontWeight:isMain||isCta?600:500, cursor:'default', userSelect:'none',
+    boxShadow: isMain||isCta ? '0 4px 10px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.05)'
   };
-  const ib={background:'none',border:'none',cursor:'pointer',color:'var(--color-text-tertiary)',padding:'0 2px',lineHeight:1,display:'inline-flex',alignItems:'center',justifyContent:'center'};
-  return React.createElement('div',{className:'nw',style:{display:'inline-flex',alignItems:'center',gap:3}},
+  const ib={background:'none',border:'none',cursor:'pointer',color:'var(--color-text-tertiary)',padding:'0 4px',lineHeight:1,display:'inline-flex',alignItems:'center',justifyContent:'center'};
+  return React.createElement('div',{className:'nw',style:{display:'inline-flex',alignItems:'center',gap:6}},
     React.createElement('div',{style:pill,onDoubleClick:()=>{setDraft(label);setEd(true);}},label),
-    React.createElement('div',{className:'nd',style:{display:'inline-flex',gap:1,alignItems:'center'}},
+    React.createElement('div',{className:'nd',style:{display:'inline-flex',gap:2,alignItems:'center'}},
       React.createElement('button',{style:ib,onClick:()=>{setDraft(label);setEd(true);}},React.createElement(IcEdit)),
-      onAddChild&&React.createElement('button',{style:ib,onClick:onAddChild},React.createElement(IcPlus,{s:8})),
-      React.createElement('button',{style:ib,onClick:onDelete},React.createElement(IcX,{s:7}))
+      onAddChild&&React.createElement('button',{style:ib,onClick:onAddChild},React.createElement(IcPlus,{s:12})),
+      React.createElement('button',{style:ib,onClick:onDelete},React.createElement(IcX,{s:10}))
     )
   );
 }
@@ -356,48 +307,46 @@ function SitemapView({sitemap,setSitemap}){
   const delCta=id=>setSitemap(p=>({...p,ctas:p.ctas.filter(c=>c.id!==id)}));
   const addCta=()=>setSitemap(p=>({...p,ctas:[...p.ctas,{id:uid(),label:`CTA ${p.ctas.length+1}`}]}));
 
-  const SL=({text,n})=>React.createElement('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:14}},
-    React.createElement('div',{style:{width:3,height:3,borderRadius:'50%',background:A,flexShrink:0}}),
-    React.createElement('span',{style:{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--color-text-warning)',letterSpacing:'0.12em',textTransform:'uppercase'}},[text,n!=null&&` — ${n}`].filter(Boolean).join('')),
-    React.createElement('div',{style:{flex:1,height:0.5,background:'var(--color-border-tertiary)',maxWidth:80}})
+  const SL=({text,n})=>React.createElement('div',{style:{display:'flex',alignItems:'center',gap:12,marginBottom:20}},
+    React.createElement('span',{style:{fontFamily:'var(--font-mono)',fontSize:12,fontWeight:600,color:'var(--color-text-warning)',letterSpacing:'0.1em',textTransform:'uppercase'}},[text,n!=null&&` — ${n}`].filter(Boolean).join(''))
   );
-  const vl={width:1,height:12,background:G(0.14),margin:'0 auto',flexShrink:0};
+  const vl={width:2,height:24,background:G(0.16),margin:'0 auto',flexShrink:0};
 
-  return React.createElement('div',{style:{padding:'32px 28px',overflowX:'auto',minWidth:480}},
+  return React.createElement('div',{className:'canvas-bg',style:{padding:'60px 40px',overflowX:'auto',minWidth:800,minHeight:'100%'}},
     React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:8}},
       React.createElement(EditNode,{label:sitemap.home.label,onChange:v=>upd(null,v,'home'),onDelete:()=>{},isMain:true}),
       React.createElement('div',{style:vl})
     ),
-    React.createElement('div',{style:{marginBottom:32}},
+    React.createElement('div',{style:{marginBottom:48}},
       React.createElement(SL,{text:'Main Navigation',n:sitemap.pages.length}),
-      React.createElement('div',{style:{display:'flex',gap:8,flexWrap:'wrap',justifyContent:'center',alignItems:'flex-start'}},
-        sitemap.pages.map(pg=>React.createElement('div',{key:pg.id,style:{display:'flex',flexDirection:'column',alignItems:'center',padding:'0 2px'}},
+      React.createElement('div',{style:{display:'flex',gap:16,flexWrap:'wrap',justifyContent:'center',alignItems:'flex-start'}},
+        sitemap.pages.map(pg=>React.createElement('div',{key:pg.id,style:{display:'flex',flexDirection:'column',alignItems:'center',padding:'0 4px'}},
           React.createElement(EditNode,{label:pg.label,onChange:v=>upd(pg.id,v),onDelete:()=>del(pg.id),onAddChild:()=>addSub(pg.id),isMain:true}),
           pg.children.map(ch=>React.createElement('div',{key:ch.id,style:{display:'flex',flexDirection:'column',alignItems:'center'}},
             React.createElement('div',{style:vl}),
             React.createElement(EditNode,{label:ch.label,onChange:v=>upd(ch.id,v),onDelete:()=>del(ch.id)})
           ))
         )),
-        React.createElement('button',{className:'an',onClick:addMain,style:{alignSelf:'flex-start',marginLeft:4}},
-          React.createElement(IcPlus,{s:7}),' Add Page')
+        React.createElement('button',{className:'an',onClick:addMain,style:{alignSelf:'flex-start',marginLeft:8}},
+          React.createElement(IcPlus,{s:12}),' Add Page')
       )
     ),
-    sitemap.ctas&&sitemap.ctas.length>0&&React.createElement('div',{style:{marginBottom:32}},
+    sitemap.ctas&&sitemap.ctas.length>0&&React.createElement('div',{style:{marginBottom:48}},
       React.createElement(SL,{text:'Call to Actions'}),
-      React.createElement('div',{style:{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center',alignItems:'flex-start'}},
+      React.createElement('div',{style:{display:'flex',gap:20,flexWrap:'wrap',justifyContent:'center',alignItems:'flex-start'}},
         sitemap.ctas.map(cta=>React.createElement('div',{key:cta.id,style:{display:'flex',flexDirection:'column',alignItems:'center'}},
           React.createElement(EditNode,{label:cta.label,onChange:v=>upd(cta.id,v,'cta'),onDelete:()=>delCta(cta.id),isCta:true}),
           React.createElement('div',{style:vl}),
-          React.createElement('div',{style:{fontSize:10,color:'var(--color-text-tertiary)',background:'var(--color-background-secondary)',border:`0.5px solid var(--color-border-tertiary)`,borderRadius:10,padding:'2px 9px',whiteSpace:'nowrap'}},cta.label+' Form')
+          React.createElement('div',{style:{fontSize:12,color:'var(--color-text-secondary)',background:'var(--color-background-primary)',border:`1px solid var(--color-border-primary)`,borderRadius:16,padding:'6px 14px',whiteSpace:'nowrap',boxShadow:'0 2px 5px rgba(0,0,0,0.05)'}},cta.label+' Form')
         )),
-        React.createElement('button',{className:'an',onClick:addCta},React.createElement(IcPlus,{s:7}),' Add CTA')
+        React.createElement('button',{className:'an',onClick:addCta},React.createElement(IcPlus,{s:12}),' Add CTA')
       )
     ),
-    React.createElement('div',{style:{borderTop:`0.5px solid var(--color-border-tertiary)`,paddingTop:20}},
+    React.createElement('div',{style:{borderTop:`1px solid var(--color-border-primary)`,paddingTop:32}},
       React.createElement(SL,{text:'Footer'}),
-      React.createElement('div',{style:{display:'flex',gap:6,flexWrap:'wrap',justifyContent:'center'}},
+      React.createElement('div',{style:{display:'flex',gap:12,flexWrap:'wrap',justifyContent:'center'}},
         sitemap.footer.map((item,i)=>React.createElement(EditNode,{key:i,label:item,onChange:v=>upd(i,v,'footer'),onDelete:()=>setSitemap(p=>({...p,footer:p.footer.filter((_,j)=>j!==i)}))})),
-        React.createElement('button',{className:'an',onClick:()=>setSitemap(p=>({...p,footer:[...p.footer,'New Link']}))},React.createElement(IcPlus,{s:7}),' Link')
+        React.createElement('button',{className:'an',onClick:()=>setSitemap(p=>({...p,footer:[...p.footer,'New Link']}))},React.createElement(IcPlus,{s:12}),' Link')
       )
     )
   );
@@ -427,37 +376,33 @@ function WireframeView({canvas,setCanvas}){
   };
   const rm=idx=>setCanvas(prev=>prev.filter((_,i)=>i!==idx));
 
-  return React.createElement('div',{style:{display:'flex',height:'100%',minHeight:520}},
-    /* Palette sidebar */
-    React.createElement('div',{style:{width:168,flexShrink:0,borderRight:`0.5px solid var(--color-border-tertiary)`,overflowY:'auto',padding:'16px 12px',background:'var(--color-background-secondary)'}},
-      React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--color-text-tertiary)',letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:16}},'Components'),
-      CATS.map(cat=>React.createElement('div',{key:cat,style:{marginBottom:16}},
-        React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:8.5,color:'var(--color-text-warning)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:6,paddingLeft:2}},cat),
+  return React.createElement('div',{style:{display:'flex',height:'100%'}},
+    React.createElement('div',{style:{width:260,flexShrink:0,borderRight:`1px solid var(--color-border-primary)`,overflowY:'auto',padding:'24px 20px',background:'var(--color-background-primary)',boxShadow:'4px 0 16px rgba(0,0,0,0.03)',zIndex:10}},
+      React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:11,fontWeight:600,color:'var(--color-text-tertiary)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:24}},'Components'),
+      CATS.map(cat=>React.createElement('div',{key:cat,style:{marginBottom:24}},
+        React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:10,fontWeight:600,color:'var(--color-text-warning)',letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:10}},cat),
         PALETTE.filter(p=>p.c===cat).map(p=>React.createElement('div',{key:p.t,className:'pi',draggable:true,onDragStart:()=>onPD(p.t)},p.l))
       ))
     ),
-    /* Canvas */
-    React.createElement('div',{style:{flex:1,overflowY:'auto',padding:'24px 20px',background:'var(--color-background-primary)'},onDragOver:e=>e.preventDefault(),onDrop:onFallDrop},
-      canvas.length===0&&React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:340,gap:12}},
-        React.createElement('div',{style:{width:48,height:48,border:`1.5px dashed ${G(0.16)}`,borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',color:G(0.25),opacity:0.7}},React.createElement(IcPlus,{s:16})),
-        React.createElement('p',{style:{fontSize:13.5,fontWeight:500,color:'var(--color-text-secondary)',letterSpacing:'-0.01em'}},'Drag components here'),
-        React.createElement('p',{style:{fontSize:11,color:'var(--color-text-tertiary)',letterSpacing:'0.01em'}},'Build your page wireframe from the panel on the left')
+    React.createElement('div',{className:'canvas-bg',style:{flex:1,overflowY:'auto',padding:'40px'},onDragOver:e=>e.preventDefault(),onDrop:onFallDrop},
+      canvas.length===0&&React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:'70vh',gap:16}},
+        React.createElement('div',{style:{width:64,height:64,border:`2px dashed ${G(0.18)}`,borderRadius:'var(--border-radius-lg)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--color-text-tertiary)',opacity:0.5}},React.createElement(IcPlus,{s:24})),
+        React.createElement('p',{style:{fontSize:18,fontWeight:600,color:'var(--color-text-secondary)'}},'Drag components here'),
+        React.createElement('p',{style:{fontSize:14,color:'var(--color-text-tertiary)'}},'Build your home page wireframe visually')
       ),
-      React.createElement('div',{style:{maxWidth:600,margin:'0 auto',border:`0.5px solid var(--color-border-secondary)`,borderRadius:12,overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,0.09),0 2px 8px rgba(0,0,0,0.05)'}},
-        /* Browser chrome */
-        React.createElement('div',{style:{background:'var(--color-background-secondary)',padding:'10px 16px',display:'flex',alignItems:'center',gap:7,borderBottom:`0.5px solid var(--color-border-tertiary)`}},
-          [['#FF5F57',11],['#FEBC2E',11],['#28C840',11]].map(([c,s],i)=>React.createElement('div',{key:i,style:{width:s,height:s,borderRadius:'50%',background:c}})),
-          React.createElement('div',{style:{flex:1,height:22,background:'var(--color-background-primary)',borderRadius:11,marginLeft:8,border:`0.5px solid var(--color-border-tertiary)`,display:'flex',alignItems:'center',paddingLeft:12,gap:6}},
-            React.createElement('div',{style:{width:8,height:8,borderRadius:'50%',background:G(0.12)}}),
-            React.createElement('span',{style:{fontSize:10,color:'var(--color-text-tertiary)',fontFamily:'var(--font-mono)',letterSpacing:'0.02em'}},'yourwebsite.com')
+      React.createElement('div',{style:{maxWidth:860,margin:'0 auto',border:`1px solid var(--color-border-primary)`,borderRadius:'var(--border-radius-lg)',overflow:'hidden',boxShadow:'0 24px 48px -12px rgba(0,0,0,0.1), 0 12px 24px -8px rgba(0,0,0,0.05)',backgroundColor:'var(--color-background-primary)'}},
+        React.createElement('div',{style:{background:'var(--color-border-tertiary)',padding:'16px 24px',display:'flex',alignItems:'center',gap:10,borderBottom:`1px solid var(--color-border-primary)`}},
+          [['#FF5F57',14],['#FEBC2E',14],['#28C840',14]].map(([c,s],i)=>React.createElement('div',{key:i,style:{width:s,height:s,borderRadius:'50%',background:c}})),
+          React.createElement('div',{style:{flex:1,height:28,background:'var(--color-background-primary)',borderRadius:14,marginLeft:16,border:`1px solid var(--color-border-primary)`,display:'flex',alignItems:'center',paddingLeft:16,boxShadow:'inset 0 1px 3px rgba(0,0,0,0.02)'}},
+            React.createElement('span',{style:{fontSize:12,color:'var(--color-text-tertiary)',fontFamily:'var(--font-mono)'}},'yourwebsite.com')
           )
         ),
         React.createElement('div',{className:`dz${dropIdx===0?' hot':''}`,onDragOver:e=>onDO(e,0),onDragLeave:onDL,onDrop:e=>insert(e,0)}),
-        canvas.map((item,idx)=>React.createElement('div',{key:item.id,className:'cr',style:{position:'relative',borderBottom:`0.5px solid var(--color-border-tertiary)`}},
-          React.createElement('div',{className:'dh',draggable:true,onDragStart:()=>onCD(idx),style:{position:'absolute',left:5,top:'50%',transform:'translateY(-50%)',zIndex:3,color:'var(--color-text-tertiary)',cursor:'grab',padding:3}},React.createElement(IcGrip)),
-          React.createElement('div',{style:{position:'absolute',top:5,left:20,zIndex:2,fontSize:8,fontFamily:'var(--font-mono)',color:'var(--color-text-warning)',letterSpacing:'0.07em',textTransform:'uppercase',opacity:0.8,pointerEvents:'none'}},item.label),
-          React.createElement('button',{className:'rm',onClick:()=>rm(idx),style:{position:'absolute',top:5,right:7,background:'none',border:'none',cursor:'pointer',color:'var(--color-text-tertiary)',zIndex:3,padding:3,display:'flex',alignItems:'center',justifyContent:'center'}},React.createElement(IcX,{s:7})),
-          React.createElement('div',{onDragOver:e=>onDO(e,idx),onDragLeave:onDL,style:{paddingTop:14}},React.createElement(WFB,{type:item.type})),
+        canvas.map((item,idx)=>React.createElement('div',{key:item.id,className:'cr',style:{position:'relative',borderBottom:`1px solid var(--color-border-secondary)`}},
+          React.createElement('div',{className:'dh',draggable:true,onDragStart:()=>onCD(idx),style:{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',zIndex:3,color:'var(--color-text-tertiary)',cursor:'grab',padding:6}},React.createElement(IcGrip)),
+          React.createElement('div',{style:{position:'absolute',top:12,left:28,zIndex:2,fontSize:10,fontFamily:'var(--font-mono)',fontWeight:600,color:'var(--color-text-warning)',letterSpacing:'0.06em',textTransform:'uppercase',opacity:0.8,pointerEvents:'none'}},item.label),
+          React.createElement('button',{className:'rm',onClick:()=>rm(idx),style:{position:'absolute',top:12,right:12,background:'var(--color-background-secondary)',border:'1px solid var(--color-border-primary)',borderRadius:'50%',cursor:'pointer',color:'var(--color-text-secondary)',zIndex:3,width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 4px rgba(0,0,0,0.05)'}},React.createElement(IcX,{s:10})),
+          React.createElement('div',{onDragOver:e=>onDO(e,idx),onDragLeave:onDL,style:{paddingTop:20}},React.createElement(WFB,{type:item.type})),
           React.createElement('div',{className:`dz${dropIdx===idx+1?' hot':''}`,onDragOver:e=>onDO(e,idx+1),onDragLeave:onDL,onDrop:e=>insert(e,idx+1)})
         ))
       )
@@ -494,16 +439,16 @@ function App(){
     const ref=tab==='sitemap'?smRef:wfRef;
     if(!ref.current){alert('Nothing to export yet.');return;}
     const title=tab==='sitemap'?'Sitemap':'Wireframe — Home Page';
-    const w=window.open('','_blank','width=1000,height=800');
+    const w=window.open('','_blank','width=1200,height=900');
     if(!w){alert('Allow popups to export PDF');return;}
     w.document.write(`<!DOCTYPE html><html><head><title>${proj||'Project'} — ${title}</title><style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#111;padding:44px 52px;}
-.header{margin-bottom:36px;border-bottom:1px solid #eee;padding-bottom:20px;}
-.header h1{font-size:22px;font-weight:400;font-style:italic;letter-spacing:-0.01em;color:#111;}
-.header p{font-size:10px;color:#999;font-family:monospace;letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#111;padding:60px 80px;}
+.header{margin-bottom:48px;border-bottom:2px solid #eee;padding-bottom:24px;}
+.header h1{font-size:32px;font-weight:400;font-style:italic;letter-spacing:-0.01em;color:#111;}
+.header p{font-size:14px;color:#999;font-family:monospace;letter-spacing:0.08em;text-transform:uppercase;margin-top:8px;}
 button,input,.nd,.dh,.rm{display:none!important;}
-@media print{@page{margin:12mm;size:A4;}}
+@media print{@page{margin:15mm;size:A4;}}
 </style></head><body>
 <div class="header"><h1>${proj||'Client Project'}</h1><p>${title}</p></div>
 ${ref.current.innerHTML}
@@ -513,86 +458,75 @@ ${ref.current.innerHTML}
 
   /* ── Setup ── */
   if(!sitemap){
-    const divider=React.createElement('div',{style:{height:0.5,background:'var(--color-border-tertiary)',margin:'22px 0'}});
-    const lbl=txt=>React.createElement('div',{style:{display:'flex',alignItems:'center',gap:6,marginBottom:14}},
-      React.createElement('div',{style:{width:2,height:10,background:A,borderRadius:2,flexShrink:0}}),
-      React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--color-text-tertiary)',letterSpacing:'0.12em',textTransform:'uppercase'}}},txt)
+    const divider=React.createElement('div',{style:{height:1,background:'var(--color-border-secondary)',margin:'32px 0'}});
+    const lbl=txt=>React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:12,fontWeight:600,color:'var(--color-text-tertiary)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:16}},txt);
+    const counter=(val,setVal,lo,hi)=>React.createElement('div',{style:{display:'flex',alignItems:'center',gap:24,justifyContent:'center'}} ,
+      React.createElement('button',{className:'cb',onClick:()=>setVal(v=>Math.max(lo,v-1))},React.createElement('span',{style:{fontSize:24,lineHeight:1}},'\u2212')),
+      React.createElement('span',{style:{fontSize:54,fontWeight:400,fontStyle:'italic',fontFamily:'var(--font-serif)',minWidth:70,textAlign:'center',color:'var(--color-text-primary)'}},val),
+      React.createElement('button',{className:'cb',onClick:()=>setVal(v=>Math.min(hi,v+1))},React.createElement('span',{style:{fontSize:24,lineHeight:1}},'+'))
     );
-    const counter=(val,setVal,lo,hi)=>React.createElement('div',{style:{display:'flex',alignItems:'center',gap:18,justifyContent:'center'}},
-      React.createElement('button',{className:'cb',onClick:()=>setVal(v=>Math.max(lo,v-1))},React.createElement('span',{style:{fontSize:18,lineHeight:1}},'\u2212')),
-      React.createElement('span',{style:{fontSize:44,fontWeight:400,fontStyle:'italic',fontFamily:SF,minWidth:54,textAlign:'center',color:'var(--color-text-primary)',lineHeight:1.1}},val),
-      React.createElement('button',{className:'cb',onClick:()=>setVal(v=>Math.min(hi,v+1))},React.createElement('span',{style:{fontSize:18,lineHeight:1}},'+'))
+    const dots=React.createElement('div',{style:{display:'flex',justifyContent:'center',gap:8,marginBottom:40}},
+      [1,2].map(s=>React.createElement('div',{key:s,style:{width:s===step?24:8,height:6,borderRadius:4,background:s===step?A:G(0.18),transition:'width .3s cubic-bezier(0.16, 1, 0.3, 1),background .3s'}}))
     );
-    const bgStyle={
-      padding:'48px 24px',display:'flex',flexDirection:'column',alignItems:'center',
-      background:`radial-gradient(circle,${G(0.055)} 1px,transparent 1px) 0 0 / 22px 22px, var(--color-background-secondary)`,
-      minHeight:'100%',
-    };
-    const cardStyle={
-      background:'var(--color-background-primary)',
-      border:`0.5px solid var(--color-border-tertiary)`,
-      borderRadius:'var(--border-radius-lg)',
-      padding:'36px 40px',
-      boxShadow:'0 8px 32px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04)',
-    };
-    const dots=React.createElement('div',{style:{display:'flex',justifyContent:'center',gap:6,marginBottom:32}},
-      [1,2].map(s=>React.createElement('div',{key:s,style:{width:s===step?22:6,height:4,borderRadius:3,background:s===step?A:G(0.16),transition:'width .24s,background .24s'}}))
-    );
-    if(step===1)return React.createElement('div',{style:bgStyle},
+    
+    const wrapperStyle = { padding:'80px 40px', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:'100vh', background: 'var(--color-background-secondary)' };
+    const cardStyle = { background:'var(--color-background-primary)', border:`1px solid var(--color-border-secondary)`, borderRadius:'var(--border-radius-xl)', padding:'48px 56px', maxWidth:600, width:'100%', boxShadow:'0 20px 40px -10px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05)' };
+
+    if(step===1)return React.createElement('div',{style:wrapperStyle},
       dots,
-      React.createElement('div',{style:{...cardStyle,maxWidth:460,width:'100%'}},
-        React.createElement('div',{style:{marginBottom:24}},
+      React.createElement('div',{style:cardStyle},
+        React.createElement('div',{style:{marginBottom:32}},
           lbl('Project / Client'),
-          React.createElement('input',{className:'si',value:proj,onChange:e=>setProj(e.target.value),placeholder:'e.g. Montare Structures'})
+          React.createElement('input',{className:'si',value:proj,onChange:e=>setProj(e.target.value),placeholder:'e.g. Montare Structures',style:{fontSize: 18, padding: '16px 20px'}})
         ),
         divider,
-        React.createElement('div',{style:{marginBottom:20}},
+        React.createElement('div',{style:{marginBottom:32}},
           lbl('Main navigation pages'),
           counter(numMain,setNumMain,1,10)
         ),
         divider,
-        React.createElement('div',{style:{marginBottom:32}},
+        React.createElement('div',{style:{marginBottom:40}},
           lbl('Call to action buttons'),
           counter(numCtas,setNumCtas,0,6)
         ),
-        React.createElement('button',{className:'ab',onClick:()=>{initPages(numMain);setStep(2);},style:{width:'100%',padding:'12px',borderRadius:'var(--border-radius-lg)',fontSize:13,letterSpacing:'0.02em'}},
-          'Continue →'
+        React.createElement('button',{className:'ab',onClick:()=>{initPages(numMain);setStep(2);},style:{width:'100%',padding:'16px',borderRadius:'var(--border-radius-lg)',fontSize:16,letterSpacing:'0.01em'}},
+          'Continue'
         )
       )
     );
-    return React.createElement('div',{style:bgStyle},
+    return React.createElement('div',{style:wrapperStyle},
       dots,
-      React.createElement('div',{style:{...cardStyle,maxWidth:500,width:'100%'}},
-        React.createElement('div',{style:{marginBottom:20}},
+      React.createElement('div',{style:cardStyle},
+        React.createElement('div',{style:{marginBottom:32}},
           lbl('Configure each page'),
-          React.createElement('p',{style:{fontSize:11.5,color:'var(--color-text-tertiary)',marginBottom:0,lineHeight:1.5}},'Name each page and set the number of subpages. You can rename everything after.')
+          React.createElement('p',{style:{fontSize:14,color:'var(--color-text-tertiary)',marginBottom:24,lineHeight:1.5}},'Name each page and set how many subpages it has. You can rename everything later.')
         ),
-        React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:7,marginBottom:32}},
-          pageSetups.map((ps,i)=>React.createElement('div',{key:i,style:{display:'flex',gap:8,alignItems:'center'}},
-            React.createElement('input',{className:'si',value:ps.name,onChange:e=>setPageSetups(p=>p.map((x,j)=>j===i?{...x,name:e.target.value}:x)),placeholder:`Page ${i+1}`,style:{flex:1,padding:'8px 12px',fontSize:12}}),
-            React.createElement('span',{style:{fontSize:9,color:'var(--color-text-tertiary)',fontFamily:'var(--font-mono)',whiteSpace:'nowrap',letterSpacing:'0.06em'}},'SUBS'),
-            React.createElement('button',{className:'cb',onClick:()=>setPageSetups(p=>p.map((x,j)=>j===i?{...x,subs:Math.max(0,x.subs-1)}:x)),style:{width:27,height:27,fontSize:14}},React.createElement('span',{style:{fontSize:15,lineHeight:1}},'\u2212')),
-            React.createElement('span',{style:{fontSize:14,minWidth:18,textAlign:'center',fontWeight:500,fontFamily:'var(--font-mono)'}},ps.subs),
-            React.createElement('button',{className:'cb',onClick:()=>setPageSetups(p=>p.map((x,j)=>j===i?{...x,subs:Math.min(8,x.subs+1)}:x)),style:{width:27,height:27}},' + ')
+        React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:12,marginBottom:40}},
+          pageSetups.map((ps,i)=>React.createElement('div',{key:i,style:{display:'flex',gap:12,alignItems:'center'}} ,
+            React.createElement('input',{className:'si',value:ps.name,onChange:e=>setPageSetups(p=>p.map((x,j)=>j===i?{...x,name:e.target.value}:x)),placeholder:`Page ${i+1}`,style:{flex:1,padding:'12px 16px',fontSize:14}}),
+            React.createElement('span',{style:{fontSize:11,fontWeight:600,color:'var(--color-text-tertiary)',fontFamily:'var(--font-mono)',whiteSpace:'nowrap',letterSpacing:'0.05em'}} ,'SUBS'),
+            React.createElement('button',{className:'cb',onClick:()=>setPageSetups(p=>p.map((x,j)=>j===i?{...x,subs:Math.max(0,x.subs-1)}:x)),style:{width:32,height:32,fontSize:16}} ,React.createElement('span',{style:{fontSize:16,lineHeight:1}},'\u2212')),
+            React.createElement('span',{style:{fontSize:16,minWidth:24,textAlign:'center',fontWeight:600,fontFamily:'var(--font-mono)'}},ps.subs),
+            React.createElement('button',{className:'cb',onClick:()=>setPageSetups(p=>p.map((x,j)=>j===i?{...x,subs:Math.min(8,x.subs+1)}:x)),style:{width:32,height:32,fontSize:18}} ,' + ')
           ))
         ),
-        React.createElement('div',{style:{display:'flex',gap:8}},
-          React.createElement('button',{className:'gb',onClick:()=>setStep(1),style:{flex:1,padding:'11px',borderRadius:'var(--border-radius-lg)',fontSize:12}},'← Back'),
-          React.createElement('button',{className:'ab',onClick:build,style:{flex:2,padding:'11px',borderRadius:'var(--border-radius-lg)',fontSize:12,letterSpacing:'0.02em'}},'Generate →')
+        React.createElement('div',{style:{display:'flex',gap:16}},
+          React.createElement('button',{className:'gb',onClick:()=>setStep(1),style:{flex:1,padding:'14px',borderRadius:'var(--border-radius-lg)',fontSize:15}},'Back'),
+          React.createElement('button',{className:'ab',onClick:build,style:{flex:2,padding:'14px',borderRadius:'var(--border-radius-lg)',fontSize:15,letterSpacing:'0.01em'}},'Generate Workspace')
         )
       )
     );
   }
 
   /* ── Main tool ── */
-  return React.createElement('div',{style:{display:'flex',flexDirection:'column',minHeight:560}},
-    React.createElement('div',{style:{display:'flex',alignItems:'center',borderBottom:`0.5px solid var(--color-border-tertiary)`,background:'var(--color-background-secondary)',padding:'0 18px',gap:2,flexShrink:0,boxShadow:'0 1px 0 var(--color-border-tertiary)'}},
-      proj&&React.createElement('span',{style:{fontFamily:SF,fontStyle:'italic',fontSize:16,color:'var(--color-text-primary)',marginRight:12,paddingRight:12,borderRight:`0.5px solid var(--color-border-tertiary)`,whiteSpace:'nowrap',letterSpacing:'-0.01em'}},proj),
-      React.createElement('button',{className:`tb${tab==='sitemap'?' on':''}`,onClick:()=>setTab('sitemap')},'Sitemap'),
-      React.createElement('button',{className:`tb${tab==='wireframe'?' on':''}`,onClick:()=>setTab('wireframe')},'Wireframe'),
+  return React.createElement('div',{style:{display:'flex',flexDirection:'column',height:'100vh',overflow:'hidden'}},
+    React.createElement('div',{style:{display:'flex',alignItems:'center',borderBottom:`1px solid var(--color-border-primary)`,background:'var(--color-background-primary)',padding:'0 24px',height:72,gap:8,flexShrink:0,boxShadow:'0 1px 4px rgba(0,0,0,0.02)',zIndex:20}},
+      proj&&React.createElement('span',{style:{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:20,color:'var(--color-text-primary)',marginRight:16,paddingRight:24,borderRight:`1px solid var(--color-border-secondary)`,whiteSpace:'nowrap'}},proj),
+      React.createElement('button',{className:`tb${tab==='sitemap'?' on':''}`,style:{height:'100%'},onClick:()=>setTab('sitemap')},'Sitemap'),
+      React.createElement('button',{className:`tb${tab==='wireframe'?' on':''}`,style:{height:'100%'},onClick:()=>setTab('wireframe')},'Wireframe'),
       React.createElement('div',{style:{flex:1}}),
-      React.createElement('button',{className:'gb',onClick:()=>{setSitemap(null);setStep(1);},style:{fontSize:11,padding:'5px 12px',borderRadius:'var(--border-radius-md)',marginRight:7}},'New'),
-      React.createElement('button',{className:'ab',onClick:exportPDF,style:{fontSize:11,padding:'6px 15px',borderRadius:'var(--border-radius-md)'}},'\u2193  Export PDF')
+      React.createElement('button',{className:'gb',onClick:()=>{setSitemap(null);setStep(1);},style:{fontSize:13,padding:'8px 16px',borderRadius:'var(--border-radius-md)',marginRight:12}},'New Project'),
+      React.createElement('button',{className:'ab',onClick:exportPDF,style:{fontSize:13,padding:'8px 20px',borderRadius:'var(--border-radius-md)'}},'\u2193  Export PDF')
     ),
     tab==='sitemap'&&React.createElement('div',{ref:smRef,style:{flex:1,overflowY:'auto'}},React.createElement(SitemapView,{sitemap,setSitemap})),
     tab==='wireframe'&&React.createElement('div',{ref:wfRef,style:{flex:1,overflow:'hidden',display:'flex',flexDirection:'column'}},React.createElement(WireframeView,{canvas,setCanvas}))
@@ -600,3 +534,5 @@ ${ref.current.innerHTML}
 }
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 </script>
+</body>
+</html>

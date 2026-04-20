@@ -23,7 +23,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font-sans); color: var(--color-text-primary);}
-.pi{padding:6px 10px;font-size:11px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:grab;user-select:none;transition:background .14s,color .14s,border-color .14s;margin-bottom:3px;display:block;}
+.pi{padding:6px 10px;font-size:11px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;user-select:none;transition:background .14s,color .14s,border-color .14s;margin-bottom:3px;display:block;}
 .pi:hover{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-secondary);}
 .tb{padding:11px 16px;border:none;border-bottom:2px solid transparent;background:none;font-size:13px;font-family:var(--font-sans);cursor:pointer;transition:color .15s,border-color .15s;color:var(--color-text-secondary);}
 .tb.on{color:var(--color-text-primary);font-weight:500;border-bottom-color:#EF9F27;}
@@ -62,7 +62,7 @@ const PALETTE=[
   {t:'navbar',l:'Navigation Bar',c:'Structure'},{t:'hero',l:'Hero / Banner',c:'Structure'},
   {t:'video',l:'Marketing Video',c:'Content'},{t:'steps3',l:'3-Step Process',c:'Content'},
   {t:'split2',l:'Two-Column Split',c:'Content'},{t:'stats',l:'Stats Row',c:'Content'},
-  {t:'note',l:'Text / Comment',c:'Content'}, /* NEW TEXT COMPONENT */
+  {t:'note',l:'Text / Comment',c:'Content'},
   {t:'cards4',l:'Service Cards (4)',c:'Services'},{t:'cards3',l:'Feature Cards (3)',c:'Services'},
   {t:'testimonials',l:'Testimonials',c:'Trust'},{t:'logos',l:'Logos / Partners',c:'Trust'},
   {t:'faq',l:'FAQ Section',c:'Content'},{t:'casestudies',l:'Case Studies',c:'Content'},
@@ -82,7 +82,6 @@ const Bt=({dk=true,w=28})=>React.createElement('div',{style:{height:24,padding:'
 );
 const Ci=({s=24,c='#8888BB'})=>React.createElement('div',{style:{width:s,height:s,borderRadius:'50%',background:c,flexShrink:0}});
 
-/* Enhanced Wireframe Components */
 function WFB({type}){
   const P={padding:'16px 20px',display:'flex',flexDirection:'column',gap:8};
   const R={display:'flex',gap:12};
@@ -250,7 +249,7 @@ function WFB({type}){
 const IcX=({s=7})=>React.createElement('svg',{width:s,height:s,viewBox:'0 0 8 8',fill:'none',stroke:'currentColor',strokeWidth:1.6},
   React.createElement('line',{x1:.5,y1:.5,x2:7.5,y2:7.5}),React.createElement('line',{x1:7.5,y1:.5,x2:.5,y2:7.5})
 );
-const IcEdit=()=>React.createElement('svg',{width:9,height:9,viewBox:'0 0 10 10',fill:'none',stroke:'currentColor',strokeWidth:1.4},
+const IcEdit=({s=9})=>React.createElement('svg',{width:s,height:s,viewBox:'0 0 10 10',fill:'none',stroke:'currentColor',strokeWidth:1.4},
   React.createElement('path',{d:'M1 7.5L2.5 9L9 2.5L7.5 1L1 7.5z'}),React.createElement('line',{x1:6.5,y1:1.5,x2:8.5,y2:3.5})
 );
 const IcPlus=({s=8})=>React.createElement('svg',{width:s,height:s,viewBox:'0 0 8 8',fill:'none',stroke:'currentColor',strokeWidth:1.6},
@@ -285,13 +284,15 @@ function EditNode({label,onChange,onDelete,onAddChild,isMain,isCta,onMoveLeft,on
   };
   const ib={background:'none',border:'none',cursor:'pointer',color:'var(--color-text-tertiary)',padding:'0 2px',lineHeight:1,display:'inline-flex',alignItems:'center',justifyContent:'center'};
   return React.createElement('div',{className:'nw',style:{display:'inline-flex',alignItems:'center',gap:3}},
-    React.createElement('div',{style:pill,onClick:()=>{setDraft(label);setEd(true);}},label),
+    React.createElement('div',{style:pill,onClick:()=>{setDraft(label);setEd(true);}, title: "Click to edit name"},
+      label,
+      React.createElement('span', {style:{marginLeft:6, display:'inline-flex', opacity:0.35}}, React.createElement(IcEdit, {s: 8}))
+    ),
     React.createElement('div',{className:'nd',style:{display:'inline-flex',gap:1,alignItems:'center'}},
       onMoveLeft&&React.createElement('button',{style:ib,onClick:onMoveLeft},React.createElement(IcArrow,{dir:'left'})),
       onMoveUp&&React.createElement('button',{style:ib,onClick:onMoveUp},React.createElement(IcArrow,{dir:'up'})),
       onMoveDown&&React.createElement('button',{style:ib,onClick:onMoveDown},React.createElement(IcArrow,{dir:'down'})),
       onMoveRight&&React.createElement('button',{style:ib,onClick:onMoveRight},React.createElement(IcArrow,{dir:'right'})),
-      React.createElement('button',{style:ib,onClick:()=>{setDraft(label);setEd(true);}},React.createElement(IcEdit)),
       onAddChild&&React.createElement('button',{style:ib,onClick:onAddChild},React.createElement(IcPlus,{s:8})),
       React.createElement('button',{style:ib,onClick:onDelete},React.createElement(IcX,{s:7}))
     )
@@ -338,8 +339,9 @@ function SitemapView({sitemap,setSitemap}){
       React.createElement('div',{style:vl})
     ),
     React.createElement('div',{style:{marginBottom:32}},
-      React.createElement(SL,{text:'Main Navigation',n:sitemap.pages.length}),
+      React.createElement(SL,{text:'Main Navigation & CTAs',n:sitemap.pages.length + (sitemap.ctas?.length||0)}),
       React.createElement('div',{style:{display:'flex',gap:6,flexWrap:'wrap',justifyContent:'center',alignItems:'flex-start'}},
+        // Standard Pages
         sitemap.pages.map((pg, i)=>React.createElement('div',{key:pg.id,style:{display:'flex',flexDirection:'column',alignItems:'center',padding:'0 4px'}},
           React.createElement(EditNode,{
               label:pg.label, onChange:v=>upd(pg.id,v), onDelete:()=>del(pg.id), onAddChild:()=>addSub(pg.id), isMain:true,
@@ -355,20 +357,19 @@ function SitemapView({sitemap,setSitemap}){
             })
           ))
         )),
-        React.createElement('button',{className:'an',onClick:addMain,style:{alignSelf:'flex-start',marginLeft:4}},
-          React.createElement(IcPlus,{s:7}),' Add Page')
-      )
-    ),
-    sitemap.ctas&&sitemap.ctas.length>0&&React.createElement('div',{style:{marginBottom:32}},
-      React.createElement(SL,{text:'Call to Actions'}),
-      // Force CTAs into a single horizontal row
-      React.createElement('div',{style:{display:'flex',gap:16,flexWrap:'nowrap',justifyContent:'center',alignItems:'flex-start',overflowX:'auto',paddingBottom:8}},
-        sitemap.ctas.map(cta=>React.createElement('div',{key:cta.id,style:{display:'flex',flexDirection:'column',alignItems:'center'}},
-          React.createElement(EditNode,{label:cta.label,onChange:v=>upd(cta.id,v,'cta'),onDelete:()=>delCta(cta.id),isCta:true}),
-          React.createElement('div',{style:vl}),
-          React.createElement('div',{style:{fontSize:10,color:'var(--color-text-tertiary)',background:'var(--color-background-secondary)',border:`0.5px solid var(--color-border-tertiary)`,borderRadius:10,padding:'2px 9px',whiteSpace:'nowrap'}},cta.label+' Form')
-        )),
-        React.createElement('button',{className:'an',onClick:addCta},React.createElement(IcPlus,{s:7}),' Add CTA')
+        React.createElement('button',{className:'an',onClick:addMain,style:{alignSelf:'flex-start',marginTop:4}},
+          React.createElement(IcPlus,{s:7}),' Add Page'),
+          
+        // Inline CTAs
+        sitemap.ctas && sitemap.ctas.length > 0 && React.createElement(React.Fragment, null,
+          React.createElement('div', {style: {width: 1, minHeight: 30, background: 'var(--color-border-secondary)', margin: '0 12px'}}),
+          sitemap.ctas.map(cta=>React.createElement('div',{key:cta.id,style:{display:'flex',flexDirection:'column',alignItems:'center',padding:'0 4px'}},
+            React.createElement(EditNode,{label:cta.label,onChange:v=>upd(cta.id,v,'cta'),onDelete:()=>delCta(cta.id),isCta:true}),
+            React.createElement('div',{style:vl}),
+            React.createElement('div',{style:{fontSize:10,color:'var(--color-text-tertiary)',background:'var(--color-background-secondary)',border:`0.5px solid var(--color-border-tertiary)`,borderRadius:10,padding:'2px 9px',whiteSpace:'nowrap'}},'Form')
+          )),
+          React.createElement('button',{className:'an',onClick:addCta,style:{alignSelf:'flex-start',marginTop:4}}, React.createElement(IcPlus,{s:7}),' Add CTA')
+        )
       )
     ),
     React.createElement('div',{style:{borderTop:`0.5px solid var(--color-border-tertiary)`,paddingTop:20}},
@@ -389,6 +390,7 @@ function WireframeView({canvas,setCanvas}){
   const onCD=idx=>{dragFrom.current={src:'can',idx};};
   const onDO=(e,idx)=>{e.preventDefault();setDropIdx(idx);};
   const onDL=()=>setDropIdx(null);
+  
   const insert=(e,idx)=>{
     e.stopPropagation();
     const df=dragFrom.current;
@@ -397,27 +399,41 @@ function WireframeView({canvas,setCanvas}){
     else if(df.src==='can'&&df.idx!==idx){setCanvas(prev=>{const n=[...prev];const[mv]=n.splice(df.idx,1);n.splice(df.idx<idx?idx-1:idx,0,mv);return n;});}
     dragFrom.current=null;setDropIdx(null);
   };
+  
   const onFallDrop=e=>{
     e.preventDefault();
     const df=dragFrom.current;
     if(df?.src==='pal'){const pal=PALETTE.find(p=>p.t===df.t);setCanvas(prev=>[...prev,{id:uid(),type:df.t,label:pal?.l||df.t,text:''}]);}
     dragFrom.current=null;setDropIdx(null);
   };
+  
+  const addClick=(type)=>{
+    const pal=PALETTE.find(p=>p.t===type);
+    setCanvas(prev=>[...prev,{id:uid(),type,label:pal?.l||type,text:''}]);
+  };
+
   const rm=idx=>setCanvas(prev=>prev.filter((_,i)=>i!==idx));
   const updateText=(id,val)=>setCanvas(prev=>prev.map(c=>c.id===id?{...c,text:val}:c));
+  
+  const moveItem=(idx,dir)=>setCanvas(prev=>{
+      const n=[...prev];
+      if(idx+dir<0 || idx+dir>=n.length) return prev;
+      [n[idx], n[idx+dir]] = [n[idx+dir], n[idx]];
+      return n;
+  });
 
   return React.createElement('div',{style:{display:'flex',height:'100%',minHeight:520}},
-    React.createElement('div',{style:{width:152,flexShrink:0,borderRight:`0.5px solid var(--color-border-tertiary)`,overflowY:'auto',padding:'14px 10px',background:'var(--color-background-secondary)'}},
-      React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:9,color:'var(--color-text-tertiary)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:14}},'Components'),
+    React.createElement('div',{style:{width:160,flexShrink:0,borderRight:`0.5px solid var(--color-border-tertiary)`,overflowY:'auto',padding:'14px 10px',background:'var(--color-background-secondary)'}},
+      React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:8.5,color:'var(--color-text-tertiary)',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:14,lineHeight:1.4}},'Components\n(Click or Drag)'),
       CATS.map(cat=>React.createElement('div',{key:cat,style:{marginBottom:14}},
         React.createElement('p',{style:{fontFamily:'var(--font-mono)',fontSize:8.5,color:'var(--color-text-warning)',letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:5}},cat),
-        PALETTE.filter(p=>p.c===cat).map(p=>React.createElement('div',{key:p.t,className:'pi',draggable:true,onDragStart:()=>onPD(p.t)},p.l))
+        PALETTE.filter(p=>p.c===cat).map(p=>React.createElement('div',{key:p.t,className:'pi',draggable:true,onDragStart:()=>onPD(p.t),onClick:()=>addClick(p.t)},p.l))
       ))
     ),
     React.createElement('div',{style:{flex:1,overflowY:'auto',padding:'20px',background:'var(--color-background-primary)'},onDragOver:e=>e.preventDefault(),onDrop:onFallDrop},
       canvas.length===0&&React.createElement('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:320,gap:10}},
         React.createElement('div',{style:{width:38,height:38,border:`1px dashed ${G(0.18)}`,borderRadius:'var(--border-radius-md)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--color-text-tertiary)',opacity:0.5}},React.createElement(IcPlus,{s:14})),
-        React.createElement('p',{style:{fontSize:13,fontWeight:500,color:'var(--color-text-secondary)'}},'Drag components here'),
+        React.createElement('p',{style:{fontSize:13,fontWeight:500,color:'var(--color-text-secondary)'}},'Click or drag components here'),
         React.createElement('p',{style:{fontSize:11,color:'var(--color-text-tertiary)'}},'Build your home page wireframe')
       ),
       React.createElement('div',{style:{maxWidth:640,margin:'0 auto',border:`1px solid var(--color-border-secondary)`,borderRadius:'var(--border-radius-lg)',overflow:'hidden'}},
@@ -431,7 +447,14 @@ function WireframeView({canvas,setCanvas}){
         canvas.map((item,idx)=>React.createElement('div',{key:item.id,className:'cr',style:{position:'relative',borderBottom:`1px dashed var(--color-border-secondary)`}},
           React.createElement('div',{className:'dh',draggable:true,onDragStart:()=>onCD(idx),style:{position:'absolute',left:4,top:'50%',transform:'translateY(-50%)',zIndex:3,color:'var(--color-text-tertiary)',cursor:'grab',padding:3}},React.createElement(IcGrip)),
           React.createElement('div',{style:{position:'absolute',top:5,left:18,zIndex:2,fontSize:8,fontFamily:'var(--font-mono)',color:'var(--color-text-warning)',letterSpacing:'0.06em',textTransform:'uppercase',opacity:0.75,pointerEvents:'none'}},item.label),
-          React.createElement('button',{className:'rm',onClick:()=>rm(idx),style:{position:'absolute',top:5,right:6,background:'none',border:'none',cursor:'pointer',color:'var(--color-text-tertiary)',zIndex:3,padding:3,display:'flex',alignItems:'center',justifyContent:'center'}},React.createElement(IcX,{s:7})),
+          
+          /* Updated Controls: Move Up, Move Down, Delete */
+          React.createElement('div',{className:'rm',style:{position:'absolute',top:5,right:6,display:'flex',gap:2,zIndex:3,background:'var(--color-background-primary)',borderRadius:4,padding:2,border:'1px solid var(--color-border-secondary)',boxShadow:'0 2px 4px rgba(0,0,0,0.05)'}},
+            idx > 0 && React.createElement('button',{onClick:()=>moveItem(idx,-1),style:{background:'none',border:'none',cursor:'pointer',padding:4,color:'var(--color-text-secondary)',display:'flex'}},React.createElement(IcArrow,{dir:'up'})),
+            idx < canvas.length - 1 && React.createElement('button',{onClick:()=>moveItem(idx,1),style:{background:'none',border:'none',cursor:'pointer',padding:4,color:'var(--color-text-secondary)',display:'flex'}},React.createElement(IcArrow,{dir:'down'})),
+            React.createElement('button',{onClick:()=>rm(idx),style:{background:'none',border:'none',cursor:'pointer',color:'#FF5F57',padding:4,display:'flex'}},React.createElement(IcX,{s:8}))
+          ),
+
           React.createElement('div',{onDragOver:e=>onDO(e,idx),onDragLeave:onDL,style:{paddingTop:14}},
              item.type === 'note' ? 
                React.createElement('div',{style:{padding:'16px 20px'}},

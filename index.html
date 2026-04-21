@@ -61,8 +61,8 @@ window.addEventListener('load', function() {
 const {useState,useRef,useEffect,useCallback}=React;
 const e=React.createElement;
 
-// UPDATE 1: Replaced old SVG logo with the local image path
-const LOGO="./edge--logo.png";
+// Cleaned up the logo Base64 to a universal SVG that won't break
+const LOGO="data:image/svg+xml;charset=utf-8,%3Csvg width='180' height='40' viewBox='0 0 180 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='32' font-family='Arial, Helvetica, sans-serif' font-weight='900' font-size='32' fill='%23ffffff' letter-spacing='2'%3EEDGE%3C/text%3E%3Ccircle cx='8' cy='20' r='6' fill='%23E87722'/%3E%3C/svg%3E";
 const PWD="EDGEMarketing456!!";
 const OG="#E87722";
 const S={
@@ -89,6 +89,7 @@ const PALETTE=[
   {t:"timeline",l:"Timeline",c:"Content"},{t:"footer",l:"Footer",c:"Structure"},
 ];
 
+// Rebuilt Helper Primitives to be dynamic based on the 5 variants
 const L=({w="60%",h=7,op=.3,dk=false,v=1,style={}})=>e("div",{style:{height:h,width:w,background:dk?`rgba(255,255,255,${op})`:G(v===4||v===5?op*1.5:op),borderRadius:v===2?h/2:(v===4||v===5?0:2),flexShrink:0,...style}});
 const Im=({w="100%",h=70,style={},v=1})=>e("div",{style:{width:w,height:h,background:G(.07),border:v===5?`2px solid ${G(.8)}`:`1px dashed ${G(.2)}`,borderRadius:v===2?20:(v===4||v===5?0:4),display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:v===5?`3px 3px 0 ${G(.2)}`:'none',...style}},
   e("svg",{width:13,height:13,viewBox:"0 0 24 24",fill:"none",stroke:G(.32),strokeWidth:"1.5"},e("rect",{x:3,y:3,width:18,height:18,rx:2}),e("circle",{cx:8.5,cy:8.5,r:1.5}),e("path",{d:"M21 15l-5-5L5 21"})));
@@ -101,13 +102,17 @@ const Bt=({dk=true,inv=false,v=1})=>{
 };
 const Ci=({s=24,c="#8888BB",v=1,style={}})=>e("div",{style:{width:s,height:s,borderRadius:v===4||v===5?0:"50%",background:c,flexShrink:0,border:v===5?`2px solid #18181b`:'none',...style}});
 
+// 5 Complete Style Architectures built into the layout mappings
 function WFBlock({type, variant = 1}){
   const v = variant;
+  
+  // Injectors to pass 'v' to primitives smoothly
   const _L = (p) => e(L, {...p, v});
   const _Im = (p) => e(Im, {...p, v});
   const _Bt = (p) => e(Bt, {...p, v});
   const _Ci = (p) => e(Ci, {...p, v});
 
+  // Base layout wrapper depending on Style Variant
   let P = { padding: "14px 12px", display: "flex", flexDirection: "column", gap: 8, background: "transparent", border: "none", borderRadius: 0, boxShadow: "none", width: "100%" };
   if (v === 2) P = { ...P, padding: "20px 12px", alignItems: "center" };
   if (v === 3) P = { ...P, padding: "18px 20px", background: "rgba(80,80,120,0.03)", borderRadius: 12, border: "1px solid rgba(80,80,120,0.08)", boxShadow: "0 4px 12px rgba(0,0,0,0.02)" };
@@ -122,6 +127,17 @@ function WFBlock({type, variant = 1}){
   const Grid = ({cols=3, gap=7, style={}, children}) => e("div", {style:{display:"grid", gridTemplateColumns:`repeat(${cols}, 1fr)`, gap, ...style}}, children);
 
   const m = {};
+
+  m.navbar = e(Flex, {dir: isV5?"column":(isV4?"row-reverse":"row"), align: "center", justify: v===3?"space-between":"flex-start", gap: 8, style:{background:G(.03), padding:"7px 12px"}},
+    e(_Ci, {s:24}),
+    e(Flex, {gap:6, justify: isV2?"center":"flex-start", style:{flex:1}}, [36,28,24,32].map((w,i)=>e(_L,{key:i, w, h:6}))),
+    e(Flex, {gap:5}, e(_Bt,{dk:true}), e(_Bt,{dk:false}))
+  );
+
+  const heroText = e(Flex, {dir:"column", gap:5, align: isV2?"center":(isV4?"flex-end":"flex-start"), style:{flex:1}}, e(_L,{w:"80%",h:11,op:.38}), e(_L,{w:"60%",h:11,op:.38}), e(_L,{w:"90%",h:5}), e(_L,{w:"72%",h:5}), e("div",{style:{marginTop:3}}, e(_Bt,{dk:true})));
+  if (isV2) m.hero = e("div", {style:P}, heroText, e(_Im, {h:82, style:{marginTop:12}}));
+  else if (v===3) m.hero = e("div", {style:{...P, position:"relative", padding:0, overflow:"hidden", minHeight:120}}, e(_Im, {h:120}), e("div", {style:{position:"absolute", inset:0, padding:20, display:"flex", alignItems:"center"}}, e("div", {style:{background:"rgba(255,255,255,0.9)", padding:12, borderRadius:8, width:"70%"}}, heroText)));
+  else m.hero = e("div", {style:{...P, flexDirection: isV4?"row-reverse":"row", alignItems:"center", minHeight:80}}, e(_Im, {w:"42%", h:82}), heroText);
 
   m.video = e("div", {style:{...P, alignItems:"center", padding:"12px 32px"}},
     e("div", {style:{width:isV2?"100%":(isV4?"100%":"80%"), maxWidth:isV4?500:240, height:isV4?120:66, background:G(.07), borderRadius:isV2?33:(isV4||isV5?0:4), border:isV5?`2px solid #18181b`:`1.5px solid ${G(.11)}`, display:"flex", alignItems:"center", justifyContent:"center"}}, e("div",{style:{width:22,height:22,borderRadius:isV4||isV5?0:"50%",border:`2px solid ${G(.26)}`,display:"flex",alignItems:"center",justifyContent:"center"}},e("div",{style:{width:0,height:0,borderTop:"5px solid transparent",borderBottom:"5px solid transparent",borderLeft:`7px solid ${G(.32)}`,marginLeft:2}}))),
@@ -166,61 +182,8 @@ function WFBlock({type, variant = 1}){
 
   m.timeline = e("div", {style:P}, e(_L,{w:"28%",h:8,op:.3, style:{alignSelf:isV2?"center":"flex-start"}}), e(Flex, {dir:"column", gap:9, style:{marginTop:5, paddingLeft:isV2||isV4?0:18, borderLeft:isV2||isV4?"none":`2px solid ${isV5?"#18181b":G(.13)}`, width:"100%"}}, [0,1,2].map(i=>e(Flex, {key:i, dir:isV2?"column":(isV4?"row-reverse":"row"), gap:7, align:isV2?"center":"flex-start", style:{position:"relative"}}, (!isV2&&!isV4)&&e("div",{style:{width:10,height:10,borderRadius:isV5?0:"50%",background:isV5?"#18181b":"#9090BB",position:"absolute",left:-24,top:2}}), e(Flex, {dir:"column", gap:2, align:isV2?"center":(isV4?"flex-end":"flex-start"), style:{flex:1}}, e(_L,{w:"48%",h:6,op:.33}), e(_L,{w:"76%",h:4}), e(_L,{w:"62%",h:4})), isV4&&e(_Ci,{s:20})))));
 
-  // UPDATE 2: More realistic wireframe replacements for Navbar, Hero, and Footer
-  m.navbar = e("div", { style: { ...P, flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: "12px 20px", borderBottom: "1px solid #e4e4e7", background: "#fff" } },
-      e("div", { style: { fontWeight: "bold", fontSize: "16px", color: "#18181b" } }, "Brand"),
-      e("div", { style: { display: "flex", gap: "16px", color: "#52525b", fontSize: "12px", fontWeight: 500 } },
-          e("span", null, "Features"),
-          e("span", null, "Solutions"),
-          e("span", null, "Pricing")
-      ),
-      e("div", { style: { display: "flex", gap: "8px", alignItems: "center" } },
-          e("div", { style: { padding: "6px 12px", fontSize: "12px", color: "#18181b", fontWeight: 500 } }, "Log in"),
-          e("div", { style: { padding: "6px 12px", fontSize: "12px", background: "#18181b", color: "#fff", borderRadius: "4px", fontWeight: 500 } }, "Start")
-      )
-  );
-
-  m.hero = e("div", { style: { ...P, flexDirection: "row", padding: "40px 24px", background: "#fbfbfb", alignItems: "center", gap: "24px" } },
-      e("div", { style: { flex: 1 } },
-          e("h1", { style: { fontSize: "24px", fontWeight: 800, color: "#18181b", lineHeight: 1.2, marginBottom: "12px" } }, "Build faster with our modern platform."),
-          e("p", { style: { fontSize: "12px", color: "#52525b", lineHeight: 1.5, marginBottom: "20px" } }, "Empower your team to design, build, and ship faster with our intuitive tools."),
-          e("div", { style: { display: "flex", gap: "12px" } },
-              e("div", { style: { padding: "8px 16px", background: "#2563eb", color: "#fff", borderRadius: "4px", fontSize: "12px", fontWeight: 500 } }, "Free Trial"),
-              e("div", { style: { padding: "8px 16px", border: "1px solid #d4d4d8", color: "#18181b", borderRadius: "4px", fontSize: "12px", fontWeight: 500, background: "#fff" } }, "Book Demo")
-          )
-      ),
-      e("div", { style: { flex: 1, display: "flex", justifyContent: "center" } },
-          e("div", { style: { width: "100%", height: "180px", background: "#e4e4e7", borderRadius: "8px", boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" } })
-      )
-  );
-
-  m.footer = e("div", { style: { ...P, background: "#18181b", color: "#fff", padding: "32px 24px 16px 24px" } },
-      e("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: "24px", gap: "24px", width: "100%" } },
-          e("div", { style: { flex: 1 } },
-              e("h3", { style: { fontSize: "16px", fontWeight: "bold", marginBottom: "12px" } }, "Brand"),
-              e("p", { style: { color: "#a1a1aa", fontSize: "11px", lineHeight: 1.5 } }, "Making the web a better place, one pixel at a time.")
-          ),
-          e("div", { style: { flex: 2, display: "flex", justifyContent: "space-around" } },
-              e("div", { style: { display: "flex", flexDirection: "column", gap: "8px" } },
-                  e("h4", { style: { fontWeight: 600, marginBottom: "4px", fontSize: "12px" } }, "Product"),
-                  e("span", { style: { color: "#a1a1aa", fontSize: "11px" } }, "Features"),
-                  e("span", { style: { color: "#a1a1aa", fontSize: "11px" } }, "Pricing")
-              ),
-              e("div", { style: { display: "flex", flexDirection: "column", gap: "8px" } },
-                  e("h4", { style: { fontWeight: 600, marginBottom: "4px", fontSize: "12px" } }, "Company"),
-                  e("span", { style: { color: "#a1a1aa", fontSize: "11px" } }, "About Us"),
-                  e("span", { style: { color: "#a1a1aa", fontSize: "11px" } }, "Careers")
-              )
-          )
-      ),
-      e("div", { style: { borderTop: "1px solid #3f3f46", paddingTop: "16px", display: "flex", justifyContent: "space-between", color: "#a1a1aa", fontSize: "11px", width: "100%" } },
-          e("span", null, "© 2026 Brand, Inc."),
-          e("div", { style: { display: "flex", gap: "16px" } },
-              e("span", null, "Privacy Policy"),
-              e("span", null, "Terms")
-          )
-      )
-  );
+  m.footer = e(Flex, {dir:isV2||isV4?"column":"row", gap:10, align:isV2?"center":"flex-start", style:{background:isV5?"#fff":G(.08), padding:"12px", borderTop:isV5?"4px solid #18181b":"none"}}, e(Flex, {dir:"column", gap:4, align:isV2?"center":"flex-start", style:{flex:1}}, e(_Ci,{s:22}), e(_L,{w:"68%",h:4}), e(_L,{w:"52%",h:4})), e(Grid, {cols:isV4?3:1, gap:10, style:{flex:1, display:isV4?"grid":"flex", flexDirection:isV4?"row":"row"}}, [0,1,2].map(i=>e(Flex, {key:i, dir:"column", gap:3, align:isV2?"center":"flex-start", style:{marginTop:isV2?10:0}}, e(_L,{w:"48%",h:5,op:.33}), [0,1,2].map(j=>e(_L,{key:j,w:"58%",h:3,op:.2}))))), e(Flex, {dir:"column", gap:4, align:isV2?"center":"flex-end", style:{flex:.8, marginTop:isV2?10:0}}, e(_Bt,{dk:true}), e(Flex, {gap:3, style:{marginTop:3}}, [0,1,2].map(i=>e("div",{key:i,style:{width:14,height:14,borderRadius:isV5?0:"50%",background:G(.15)}//
+  })))));
 
   return m[type] || e("div",{style:{padding:12}},e(_L,{w:"48%",h:6,op:.18}));
 }
@@ -239,7 +202,6 @@ function EditNode({label,onChange,onDelete,onAddChild,isMain,isCta}){
   const ib={background:"none",border:"none",cursor:"pointer",color:"#a1a1aa",padding:"0 2px",lineHeight:1,display:"inline-flex",alignItems:"center",justifyContent:"center"};
   return e("div",{className:"nw",style:{display:"inline-flex",alignItems:"center",gap:3}},e("div",{style:pill,onDoubleClick:()=>{setDraft(label);setEd(true);}},label),e("div",{className:"nd",style:{display:"inline-flex",gap:1,alignItems:"center"}},e("button",{style:ib,onClick:()=>{setDraft(label);setEd(true);}},e(IcEdit)),onAddChild&&e("button",{style:ib,onClick:onAddChild},e(IcPlus,{s:8})),e("button",{style:ib,onClick:onDelete},e(IcX,{s:7}))));
 }
-
 function SitemapView({sitemap,setSitemap}){
   const upd=(id,val,t)=>setSitemap(p=>{
     if(t==="home")return{...p,home:{...p.home,label:val}};
@@ -254,48 +216,28 @@ function SitemapView({sitemap,setSitemap}){
   const addCta=()=>setSitemap(p=>({...p,ctas:[...p.ctas,{id:uid(),label:`CTA ${p.ctas.length+1}`}]}));
   const SL=({text})=>e("p",{style:{fontFamily:"ui-monospace,monospace",fontSize:9,color:OG,letterSpacing:".1em",textTransform:"uppercase",marginBottom:10}},text);
   const vl={width:1,height:10,background:"rgba(0,0,0,.15)",margin:"0 auto",flexShrink:0};
-  
-  // UPDATE 3: Sitemap horizontal alignment
   return e("div",{style:{padding:"28px 24px",overflowX:"auto",minWidth:480}},
-    e("div", {style:{display:"flex", alignItems:"flex-start", justifyContent:"center", gap: 24, marginBottom:28}},
-      
-      e("div",{style:{display:"flex",flexDirection:"column",alignItems:"center"}},
-        e(SL,{text:"Home"}),
-        e(EditNode,{label:sitemap.home.label,onChange:v=>upd(null,v,"home"),onDelete:()=>{},isMain:true})
-      ),
-      
-      e("div",{style:{width:1,alignSelf:"stretch",background:"rgba(0,0,0,.1)",flexShrink:0}}),
-      
-      e("div",{style:{display:"flex",flexDirection:"column",alignItems:"center"}},
+    e("div",{style:{display:"flex",flexDirection:"column",alignItems:"center",marginBottom:6}},e(EditNode,{label:sitemap.home.label,onChange:v=>upd(null,v,"home"),onDelete:()=>{},isMain:true}),e("div",{style:vl})),
+    e("div",{style:{marginBottom:28}},
+      e("div",{style:{display:"flex",alignItems:"center",gap:10,marginBottom:10,justifyContent:"center"}},
         e(SL,{text:`Navigation — ${sitemap.pages.length}`}),
-        e("div",{style:{display:"flex",gap:6}},
-          sitemap.pages.map(pg=>e("div",{key:pg.id,style:{display:"flex",flexDirection:"column",alignItems:"center",padding:"0 2px"}},
-            e(EditNode,{label:pg.label,onChange:v=>upd(pg.id,v),onDelete:()=>del(pg.id),onAddChild:()=>addSub(pg.id),isMain:true}),
-            pg.children.map(ch=>e("div",{key:ch.id,style:{display:"flex",flexDirection:"column",alignItems:"center"}},e("div",{style:vl}),e(EditNode,{label:ch.label,onChange:v=>upd(ch.id,v),onDelete:()=>del(ch.id)})))
-          ))
-        )
+        sitemap.ctas&&sitemap.ctas.length>0&&e("div",{style:{width:1,height:12,background:"rgba(0,0,0,.15)",flexShrink:0}}),
+        sitemap.ctas&&sitemap.ctas.length>0&&e(SL,{text:`CTAs — ${sitemap.ctas.length}`})
       ),
-      
-      sitemap.ctas&&sitemap.ctas.length>0&&e("div",{style:{width:1,alignSelf:"stretch",background:"rgba(0,0,0,.1)",flexShrink:0}}),
-      
-      sitemap.ctas&&sitemap.ctas.length>0&&e("div",{style:{display:"flex",flexDirection:"column",alignItems:"center"}},
-        e(SL,{text:`CTAs — ${sitemap.ctas.length}`}),
-        e("div",{style:{display:"flex",gap:6}},
-          sitemap.ctas.map(cta=>e("div",{key:cta.id,style:{display:"flex",flexDirection:"column",alignItems:"center"}},e(EditNode,{label:cta.label,onChange:v=>upd(cta.id,v,"cta"),onDelete:()=>delCta(cta.id),isCta:true}),e("div",{style:vl}),e("div",{style:{fontSize:10,color:"#a1a1aa",background:"#f4f4f5",border:"0.5px solid rgba(0,0,0,.08)",borderRadius:10,padding:"2px 9px",whiteSpace:"nowrap"}},cta.label+" Form")))
-        )
-      ),
-      
-      e("div",{style:{display:"flex",flexDirection:"column",gap:4,marginTop:22,marginLeft:8}},
-        e("button",{className:"dashed-btn",onClick:addMain},e(IcPlus,{s:7})," Page"),
-        e("button",{className:"dashed-btn",onClick:addCta},e(IcPlus,{s:7})," CTA")
-      )
-    ),
+      e("div",{style:{display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center",alignItems:"flex-start"}},
+        sitemap.pages.map(pg=>e("div",{key:pg.id,style:{display:"flex",flexDirection:"column",alignItems:"center",padding:"0 2px"}},
+          e(EditNode,{label:pg.label,onChange:v=>upd(pg.id,v),onDelete:()=>del(pg.id),onAddChild:()=>addSub(pg.id),isMain:true}),
+          pg.children.map(ch=>e("div",{key:ch.id,style:{display:"flex",flexDirection:"column",alignItems:"center"}},e("div",{style:vl}),e(EditNode,{label:ch.label,onChange:v=>upd(ch.id,v),onDelete:()=>del(ch.id)}))))),
+        sitemap.ctas&&sitemap.ctas.length>0&&e("div",{style:{width:1,alignSelf:"stretch",background:"rgba(0,0,0,.1)",margin:"0 6px",flexShrink:0}}),
+        sitemap.ctas&&sitemap.ctas.map(cta=>e("div",{key:cta.id,style:{display:"flex",flexDirection:"column",alignItems:"center"}},e(EditNode,{label:cta.label,onChange:v=>upd(cta.id,v,"cta"),onDelete:()=>delCta(cta.id),isCta:true}),e("div",{style:vl}),e("div",{style:{fontSize:10,color:"#a1a1aa",background:"#f4f4f5",border:"0.5px solid rgba(0,0,0,.08)",borderRadius:10,padding:"2px 9px",whiteSpace:"nowrap"}},cta.label+" Form"))),
+        e("div",{style:{display:"flex",gap:4,alignSelf:"flex-start",marginLeft:4}},
+          e("button",{className:"dashed-btn",onClick:addMain},e(IcPlus,{s:7})," Page"),
+          e("button",{className:"dashed-btn",onClick:addCta},e(IcPlus,{s:7})," CTA")))),
     e("div",{style:{borderTop:"0.5px solid rgba(0,0,0,.08)",paddingTop:16}},e(SL,{text:"Footer"}),
       e("div",{style:{display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center"}},
         sitemap.footer.map((item,i)=>e(EditNode,{key:i,label:item,onChange:v=>upd(i,v,"footer"),onDelete:()=>setSitemap(p=>({...p,footer:p.footer.filter((_,j)=>j!==i)}))})),
         e("button",{className:"dashed-btn",onClick:()=>setSitemap(p=>({...p,footer:[...p.footer,"New Link"]}))},e(IcPlus,{s:7})," Link"))));
 }
-
 function WireframeView({canvas,setCanvas}){
   const dragFrom=useRef(null);
   const[dropIdx,setDropIdx]=useState(null);
@@ -335,7 +277,6 @@ function WireframeView({canvas,setCanvas}){
           e("div",{onDragOver:ev=>onDO(ev,idx),onDragLeave:onDL,style:{paddingTop:14}},e(WFBlock,{type:item.type,variant:item.variant||1})),
           e("div",{className:`dz${dropIdx===idx+1?" hot":""}`,onDragOver:ev=>onDO(ev,idx+1),onDragLeave:onDL,onDrop:ev=>insert(ev,idx+1)}))))));
 }
-
 function Builder({initialState,onStateChange,clientName}){
   const[step,setStep]=useState(initialState?.step||1);
   const[proj,setProj]=useState(initialState?.proj||clientName||"");
@@ -396,10 +337,7 @@ function LoginScreen({onLogin}){
   const attempt=()=>{if(pwd===PWD){onLogin();}else{setErr(true);setShaking(true);setTimeout(()=>setShaking(false),500);}};
   return e("div",{style:{minHeight:"100vh",background:"#0D1117",display:"flex",alignItems:"center",justifyContent:"center"}},
     e("div",{className:"login-card",style:{animation:shaking?"shake .4s ease":"fadein .5s ease both"}},
-      e("div",{style:{textAlign:"center",marginBottom:32}},
-        // UPDATE 1.1: Image element styling for Login Screen Logo
-        e("img",{src:LOGO,style:{height:48,objectFit:"contain",marginBottom:24,display:"block",margin:"0 auto 24px auto"},alt:"EDGE"})
-      ),
+      e("div",{style:{textAlign:"center",marginBottom:32}},e("img",{src:LOGO,style:{width:160,maxWidth:"100%"},alt:"EDGE"})),
       e("p",{style:{fontSize:20,fontWeight:300,color:"rgba(255,255,255,.88)",letterSpacing:"-.01em",fontFamily:"Georgia,serif",fontStyle:"italic",marginBottom:4}},"Design Portal"),
       e("div",{style:{height:.5,background:"rgba(255,255,255,.07)",margin:"20px 0"}}),
       e("div",{style:{position:"relative",marginBottom:err?8:16}},
@@ -410,10 +348,7 @@ function LoginScreen({onLogin}){
 }
 function LoadingScreen({message,visible}){
   return e("div",{style:{position:"fixed",inset:0,background:"#0D1117",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",zIndex:9999,transition:"opacity .4s ease",opacity:visible?1:0,pointerEvents:visible?"all":"none"}},
-    e("div",{style:{animation:"pulse 2s ease-in-out infinite"}},
-      // UPDATE 1.2: Image element styling for Loading Screen Logo
-      e("img",{src:LOGO,style:{height:64,objectFit:"contain"},alt:"EDGE"})
-    ),
+    e("div",{style:{animation:"pulse 2s ease-in-out infinite"}},e("img",{src:LOGO,style:{width:140,maxWidth:"75vw"},alt:"EDGE"})),
     e("p",{style:{color:"rgba(255,255,255,.35)",fontSize:11,marginTop:22,fontFamily:"ui-monospace,monospace",letterSpacing:".1em",textTransform:"uppercase"}},message),
     e("div",{style:{position:"absolute",bottom:0,left:0,right:0,height:2,background:"rgba(255,255,255,.05)"}},
       visible&&e("div",{key:message,style:{height:"100%",background:OG,animation:"bar 1.8s ease-in-out forwards"}})));
@@ -436,10 +371,7 @@ function Portal({onLogout}){
   const fmt=ts=>{const d=new Date(ts);return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});};
   return e("div",{style:{display:"flex",height:"100vh",overflow:"hidden"}},
     e("div",{className:"sidebar"},
-      e("div",{style:{padding:"22px 18px 18px",borderBottom:"0.5px solid rgba(255,255,255,.05)"}},
-        // UPDATE 1.3: Image element styling for Sidebar Logo
-        e("img",{src:LOGO,style:{height:32,objectFit:"contain"},alt:"EDGE"})
-      ),
+      e("div",{style:{padding:"22px 18px 18px",borderBottom:"0.5px solid rgba(255,255,255,.05)"}},e("img",{src:LOGO,style:{width:96},alt:"EDGE"})),
       e("div",{style:{padding:"18px 16px 8px",display:"flex",alignItems:"center",justifyContent:"space-between"}},e("span",{style:{fontFamily:"ui-monospace,monospace",fontSize:9,color:"rgba(255,255,255,.25)",letterSpacing:".1em",textTransform:"uppercase"}},"Clients"),e("button",{onClick:()=>setShowNew(s=>!s),style:{background:"none",border:"none",cursor:"pointer",color:OG,display:"flex",alignItems:"center",justifyContent:"center",padding:2}},e(IcPlus,{s:11}))),
       showNew&&e("div",{style:{padding:"0 12px 10px",display:"flex",gap:5}},e("input",{value:newName,onChange:ev=>setNewName(ev.target.value),onKeyDown:ev=>{if(ev.key==="Enter")createClient();if(ev.key==="Escape")setShowNew(false);},placeholder:"Client name…",autoFocus:true,style:{flex:1,fontSize:11,padding:"6px 9px",background:"rgba(255,255,255,.06)",border:"0.5px solid rgba(255,255,255,.1)",borderRadius:7,color:"#F0F2F5",outline:"none",fontFamily:"inherit"}}),e("button",{onClick:createClient,style:{background:OG,border:"none",borderRadius:7,padding:"0 9px",cursor:"pointer",color:"#fff",fontSize:14,fontWeight:700,lineHeight:1}},"↵")),
       e("div",{style:{flex:1,overflowY:"auto"}},

@@ -120,6 +120,8 @@ const IcX=({s=7})=>e("svg",{width:s,height:s,viewBox:"0 0 8 8",fill:"none",strok
 const IcEdit=()=>e("svg",{width:9,height:9,viewBox:"0 0 10 10",fill:"none",stroke:"currentColor",strokeWidth:1.4},e("path",{d:"M1 7.5L2.5 9L9 2.5L7.5 1L1 7.5z"}),e("line",{x1:6.5,y1:1.5,x2:8.5,y2:3.5}));
 const IcPlus=({s=8})=>e("svg",{width:s,height:s,viewBox:"0 0 8 8",fill:"none",stroke:"currentColor",strokeWidth:1.6},e("line",{x1:4,y1:.5,x2:4,y2:7.5}),e("line",{x1:.5,y1:4,x2:7.5,y2:4}));
 const IcGrip=()=>e("svg",{width:7,height:11,viewBox:"0 0 7 11",fill:"currentColor"},[0,1,2].flatMap(r=>[0,1].map(c=>e("circle",{key:`${r}${c}`,cx:c*3.5+1.5,cy:r*4+1.5,r:1}))));
+const IcUp=()=>e("svg",{width:8,height:8,viewBox:"0 0 8 8",fill:"none",stroke:"currentColor",strokeWidth:1.6},e("polyline",{points:"1,5.5 4,2.5 7,5.5"}));
+const IcDown=()=>e("svg",{width:8,height:8,viewBox:"0 0 8 8",fill:"none",stroke:"currentColor",strokeWidth:1.6},e("polyline",{points:"1,2.5 4,5.5 7,2.5"}));
 const IcLogout=()=>e("svg",{width:13,height:13,viewBox:"0 0 16 16",fill:"none",stroke:"currentColor",strokeWidth:1.5},e("path",{d:"M10.5 11l3-3-3-3"}),e("path",{d:"M13.5 8H6"}),e("path",{d:"M8 13H3V3h5"}));
 const IcFolder=()=>e("svg",{width:20,height:20,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:1.4},e("path",{d:"M2 6a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"}));
 function EditNode({label,onChange,onDelete,onAddChild,isMain,isCta}){
@@ -183,6 +185,8 @@ function WireframeView({canvas,setCanvas}){
   };
   const onFall=ev=>{ev.preventDefault();const df=dragFrom.current;if(df?.src==="pal"){const pal=PALETTE.find(p=>p.t===df.t);setCanvas(prev=>[...prev,{id:uid(),type:df.t,label:pal?.l||df.t}]);}dragFrom.current=null;setDropIdx(null);};
   const rm=idx=>setCanvas(prev=>prev.filter((_,i)=>i!==idx));
+  const moveUp=idx=>{if(idx===0)return;setCanvas(prev=>{const n=[...prev];[n[idx-1],n[idx]]=[n[idx],n[idx-1]];return n;});};
+  const moveDown=idx=>{if(idx>=canvas.length-1)return;setCanvas(prev=>{const n=[...prev];[n[idx],n[idx+1]]=[n[idx+1],n[idx]];return n;});};
   return e("div",{style:{display:"flex",height:"100%",minHeight:520}},
     e("div",{style:{width:152,flexShrink:0,borderRight:"0.5px solid rgba(0,0,0,.07)",overflowY:"auto",padding:"14px 10px",background:"#f9f9f7"}},
       e("p",{style:{fontFamily:"ui-monospace,monospace",fontSize:9,color:"#a1a1aa",letterSpacing:".1em",textTransform:"uppercase",marginBottom:14}},"Components"),
@@ -195,7 +199,10 @@ function WireframeView({canvas,setCanvas}){
         canvas.map((item,idx)=>e("div",{key:item.id,className:"cr",style:{position:"relative",borderBottom:"0.5px solid rgba(0,0,0,.055)"}},
           e("div",{className:"dh",draggable:true,onDragStart:()=>onCD(idx),style:{position:"absolute",left:4,top:"50%",transform:"translateY(-50%)",zIndex:3,color:"#a1a1aa",cursor:"grab",padding:3}},e(IcGrip)),
           e("div",{style:{position:"absolute",top:5,left:18,zIndex:2,fontSize:8,fontFamily:"ui-monospace,monospace",color:OG,letterSpacing:".06em",textTransform:"uppercase",opacity:.75,pointerEvents:"none"}},item.label),
-          e("button",{className:"rm",onClick:()=>rm(idx),style:{position:"absolute",top:5,right:6,background:"none",border:"none",cursor:"pointer",color:"#a1a1aa",zIndex:3,padding:3,display:"flex",alignItems:"center"}},e(IcX,{s:7})),
+          e("div",{className:"rm",style:{position:"absolute",top:5,right:6,display:"flex",gap:1,alignItems:"center",zIndex:3}},
+            idx>0&&e("button",{onClick:()=>moveUp(idx),title:"Move up",style:{background:"none",border:"none",cursor:"pointer",color:"#a1a1aa",padding:3,display:"flex",alignItems:"center"}},e(IcUp)),
+            idx<canvas.length-1&&e("button",{onClick:()=>moveDown(idx),title:"Move down",style:{background:"none",border:"none",cursor:"pointer",color:"#a1a1aa",padding:3,display:"flex",alignItems:"center"}},e(IcDown)),
+            e("button",{onClick:()=>rm(idx),style:{background:"none",border:"none",cursor:"pointer",color:"#a1a1aa",padding:3,display:"flex",alignItems:"center"}},e(IcX,{s:7}))),
           e("div",{onDragOver:ev=>onDO(ev,idx),onDragLeave:onDL,style:{paddingTop:14}},e(WFBlock,{type:item.type})),
           e("div",{className:`dz${dropIdx===idx+1?" hot":""}`,onDragOver:ev=>onDO(ev,idx+1),onDragLeave:onDL,onDrop:ev=>insert(ev,idx+1)}))))));
 }
